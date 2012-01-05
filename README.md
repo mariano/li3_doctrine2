@@ -12,7 +12,7 @@ to keep up with the latest upgrades. To do so, switch to the core directory
 holding your lithium application, and do:
 
 ```bash
-$ git submodule add https://mariano@github.com/mariano/li3_doctrine2.git app/libraries/li3_doctrine2
+$ git submodule add https://github.com/mariano/li3_doctrine2.git app/libraries/li3_doctrine2
 $ cd app/libraries/li3_doctrine2 && git submodule update --init
 $ cd _source/doctrine2 && git submodule update --init
 ```
