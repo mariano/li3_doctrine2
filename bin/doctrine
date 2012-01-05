@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+$path = __DIR__ . '/../_source/doctrine2/';
+set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, array(
+    $path . 'lib'
+)));
+
+require_once $path . 'lib/vendor/doctrine-common/lib/Doctrine/Common/ClassLoader.php';
+
+$configFile = __DIR__ . '/doctrine-cli-config.php';
+
+$helperSet = null;
+if (file_exists($configFile)) {
+    if ( ! is_readable($configFile)) {
+        trigger_error(
+            'Configuration file [' . $configFile . '] does not have read permission.', E_USER_ERROR
+        );
+    }
+
+    require $configFile;
+
+    foreach ($GLOBALS as $helperSetCandidate) {
+        if ($helperSetCandidate instanceof \Symfony\Component\Console\Helper\HelperSet) {
+            $helperSet = $helperSetCandidate;
+            break;
+        }
+    }
+}
+
+$helperSet = ($helperSet) ?: new \Symfony\Component\Console\Helper\HelperSet();
+
+\Doctrine\ORM\Tools\Console\ConsoleRunner::run($helperSet);
+?>
