@@ -20,7 +20,7 @@ $ cd _source/doctrine2 && git submodule update --init
 # Using DoctrineExtensions #
 
 If there is one tool I would recommend you checkout for your Doctrine models,
-that would be [DoctrineExtensions] [DoctrineExtesions]. It provides with a set
+that would be [DoctrineExtensions] [DoctrineExtensions]. It provides with a set
 of behavioral extensions to the Doctrine core that will simplify your
 development.
 
