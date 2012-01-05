@@ -42,7 +42,7 @@ Libraries::add('Gedmo', array(
 ));
 ```
 
-And then you would the `createEntityManager` connection option in the
+And then you would use the `createEntityManager` connection option in the
 connection defied in `app/config/connections.php` to implement the callable that 
 enables the behaviors:
 
