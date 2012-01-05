@@ -38,7 +38,7 @@ define('DOCTRINE_PATH', PLUGIN_PATH . '/_source/doctrine2');
  * Load lithium connection settings
  */
 
-$loader = new \Doctrine\Common\ClassLoader("lithium", __DIR__ . '/../..');
+$loader = new \Doctrine\Common\ClassLoader("lithium", dirname($appPath) . '/libraries');
 $loader->register();
 
 $loader = new \Doctrine\Common\ClassLoader("app", dirname($appPath));
