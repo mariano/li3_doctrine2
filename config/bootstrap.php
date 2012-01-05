@@ -23,8 +23,4 @@ Libraries::add('Doctrine\ORM', array(
     'bootstrap' => false
 ));
 
-Libraries::add('Gedmo', array(
-    'path' => $libsPath . '/DoctrineExtensions/lib/Gedmo'
-));
-
 ?>
