@@ -1,5 +1,4 @@
 <?php
-
 define('PLUGIN_PATH', dirname(dirname(__FILE__)));
 define('ROOT', dirname(dirname(PLUGIN_PATH)));
 
@@ -32,44 +31,19 @@ if (!isset($appPath)) {
     );
 }
 
-define('DOCTRINE_PATH', PLUGIN_PATH . '/_source/doctrine2');
-
-/**
- * Load lithium connection settings
- */
-
-$loader = new \Doctrine\Common\ClassLoader("lithium", dirname($appPath) . '/libraries');
-$loader->register();
-
-$loader = new \Doctrine\Common\ClassLoader("app", dirname($appPath));
-$loader->register();
-
-$loader = new \Doctrine\Common\ClassLoader("li3_doctrine2", dirname(PLUGIN_PATH));
-$loader->register();
-
+require_once($appPath . 'config/bootstrap/libraries.php');
 require_once($appPath . 'config/bootstrap/connections.php');
 
-$connection = array_diff_key(
-    \lithium\data\Connections::get('default', array('config' => true)),
-    array('type'=>null, 'libraries'=>null, 'adapter'=>null, 'login'=>null, 'filters'=>null)
-);
+$connection = \lithium\data\Connections::get('default');
 
 /**
  * Continue with doctrine cli config
  */
 
 require('Doctrine/ORM/Tools/Setup.php');
-Doctrine\ORM\Tools\Setup::registerAutoloadGit(DOCTRINE_PATH);
+Doctrine\ORM\Tools\Setup::registerAutoloadGit(PLUGIN_PATH . '/_source/doctrine2');
 
-$config = new \Doctrine\ORM\Configuration();
-$annotationDriver = $config->newDefaultAnnotationDriver(array($appPath . 'models'));
-
-$config->setProxyDir($appPath . 'models/proxies');
-$config->setProxyNamespace('proxies');
-$config->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache());
-$config->setMetadataDriverImpl($annotationDriver);
-
-$em = \Doctrine\ORM\EntityManager::create($connection, $config);
+$em = $connection->getEntityManager();
 
 $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
     'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($em->getConnection()),
