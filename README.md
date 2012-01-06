@@ -1,13 +1,13 @@
-li3_doctrine2 offers integration between [the most RAD PHP framework] [lithium]
+li3\_doctrine2 offers integration between [the most RAD PHP framework] [lithium]
 and possibly the best PHP 5.3 ORM out there: [Doctrine2] [doctrine2]
 
 # License #
 
-li3_doctrine2 is released under the [BSD License] [license].
+li3\_doctrine2 is released under the [BSD License] [license].
 
 # Installation #
 
-It is recommended that you install li3_doctrine2 as a GIT submodule, in order
+It is recommended that you install li3\_doctrine2 as a GIT submodule, in order
 to keep up with the latest upgrades. To do so, switch to the core directory
 holding your lithium application, and do:
 
@@ -17,7 +17,38 @@ $ cd app/libraries/li3_doctrine2 && git submodule update --init
 $ cd _source/doctrine2 && git submodule update --init
 ```
 
-# Using DoctrineExtensions #
+# Usage #
+
+## Adding the li3_doctrine2 library ##
+
+Once you have downloaded li3_doctrine2 and placed it in your `app/libraries`,
+or your main `libraries` folder, you need to enable it by placing the following
+at the end of your `app/config/bootstrap/libraries.php` file:
+
+```php
+Libraries::add('li3_doctrine2');
+```
+
+## Defining a connection ##
+
+Setting up a connection with
+
+## Creating models ##
+
+When looking to create your doctrine models, you have two choices: you can
+have them follow your custom class hierarchy (or not at all), or you could
+have them extend from the `BaseEntity` class provided by this library. The
+advantage of choosing the later is that your models will have lithium
+validation support, and are better integrated with the custom adapters (such
+as for session management, or for authorization) also provided by this
+library.
+
+# Integrating Doctrine libraries #
+
+In this section I'll cover some of the doctrine extension libraries out there,
+and how to integrate them with li3_doctrine2.
+
+## DoctrineExtensions ##
 
 If there is one tool I would recommend you checkout for your Doctrine models,
 that would be [DoctrineExtensions] [DoctrineExtensions]. It provides with a set
@@ -38,7 +69,7 @@ to use Timestampable and Sluggable, you would first add the library in
 
 ```php
 Libraries::add('Gedmo', array(
-    'path' => Libraries::get('app', 'path') . '/libraries/_source/DoctrineExtensions/lib/Gedmo'
+    'path' => LITHIUM_APP_PATH . '/libraries/_source/DoctrineExtensions/lib/Gedmo'
 ));
 ```
 
