@@ -1,5 +1,5 @@
 <?php
-namespace li3_doctrine2\extensions\data;
+namespace li3_doctrine2\models;
 
 class ValidateException extends \Exception {
     protected $_errors;

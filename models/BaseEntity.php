@@ -12,7 +12,6 @@ use lithium\util\Inflector;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use li3_doctrine2\extensions\data\ValidateException;
 
 /**
  * This class can be used as the base class of your doctrine models, to allow
