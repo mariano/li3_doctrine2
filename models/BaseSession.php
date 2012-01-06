@@ -23,17 +23,17 @@ abstract class BaseSession extends BaseEntity {
      * @Id
      * @Column(type="string")
      */
-    private $id;
+    protected $id;
 
     /**
      * @Column(type="text",nullable=true)
      */
-    private $data;
+    protected $data;
 
     /**
      * @Column(type="datetime")
      */
-    private $expires;
+    protected $expires;
 
     /**
      * Get ID
