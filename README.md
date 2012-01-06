@@ -104,7 +104,7 @@ class User extends \li3_doctrine2\models\BaseEntity {
     /**
      * Validation rules
      */
-    private $validates = array(
+    protected $validates = array(
         'email' => array(
             'required' => array('notEmpty', 'message' => 'Email is required'),
             'valid' => array('email', 'message' => 'You must specify a valid email address', 'skipEmpty' => true)
