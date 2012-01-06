@@ -57,10 +57,98 @@ validation support, and can be better integrated with the custom adapters (such
 as for session management, or for authorization) provided by this library.
 
 Let us create a `User` model. Following doctrine's [basic mapping guide] 
-[doctrine-mapping-guide] we'll use annotations to define the properties (notice 
-how we are choosing to extend this model from `BaseEntity`):
+[doctrine-mapping-guide] we'll use annotations to define the properties, and
+we will also include lithium validation rules (that's why we are choosing to 
+extend this model from `BaseEntity`):
 
 ```php
+<?php
+namespace app\models;
+
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
+use lithium\security\Password;
+
+/**
+ * @Entity
+ * @Table(name="users")
+ */
+class User extends \li3_doctrine2\models\BaseEntity {
+    /**
+     * @Id
+     * @GeneratedValue
+     * @Column(type="integer")
+     */
+    protected $id;
+
+    /**
+     * @Column(type="string",unique=true)
+     */
+    protected $email;
+
+    /**
+     * @Column(type="text")
+     */
+    protected $password;
+
+    /**
+     * @Column(type="string")
+     */
+    protected $name;
+
+    /**
+     * Validation rules
+     */
+    protected $validates = array(
+        'email' => array(
+            'required' => array('notEmpty', 'message' => 'Email is required'),
+            'valid' => array('email', 'message' => 'You must specify a valid email address', 'skipEmpty' => true)
+        ),
+        'password' => array('notEmpty', 'message' => 'Password must not be blank'),
+        'name' => array('notEmpty', 'message' => 'Please provide your full name')
+
+    );
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    public function setEmail($email) {
+        $this->email = $email;
+    }
+
+    public function setPassword($password) {
+        $this->password = !empty($password) ? Password::hash($password) : null;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function isActivated() {
+        return $this->activated;
+    }
+
+    public function setActivated($activated) {
+        $this->activated = $activated;
+    }
+
+    public function getCreated() {
+        return $this->created;
+    }
+}
+?>
 ```
 
 # Integrating Doctrine libraries #
