@@ -10,6 +10,9 @@ class Doctrine {
 
     public function __construct(array $config = array()) {
         $defaults = array(
+            'models' => LITHIUM_APP_PATH . '/models',
+            'proxies' => LITHIUM_APP_PATH . '/proxies',
+            'proxyNamespace' => 'proxies',
             'createEntityManager' => function(array $params) {
                 return \Doctrine\ORM\EntityManager::create(
                     $params['connection'],
@@ -27,12 +30,10 @@ class Doctrine {
         )));
 
         $configuration = new \Doctrine\ORM\Configuration();
-        $annotationDriver = $configuration->newDefaultAnnotationDriver(array(
-            LITHIUM_APP_PATH . '/models'
-        ));
+        $annotationDriver = $configuration->newDefaultAnnotationDriver((array) $config['models']);
 
-        $configuration->setProxyDir(LITHIUM_APP_PATH . '/models/proxies');
-        $configuration->setProxyNamespace('proxies');
+        $configuration->setProxyDir($config['proxies']);
+        $configuration->setProxyNamespace($config['proxyNamespace']);
         $configuration->setMetadataCacheImpl(new \Doctrine\Common\Cache\ArrayCache());
         $configuration->setMetadataDriverImpl($annotationDriver);
 
