@@ -93,29 +93,22 @@ Libraries::add('Gedmo', array(
 ));
 ```
 
-And then you would use the `createEntityManager` connection option in the
-connection defied in `app/config/connections.php` to implement the callable that 
-enables the behaviors:
+And then you would filter the `createEntityManager` method in the `Doctrine`
+datasource to add the behaviors. Edit your `app/config/connections.php` file
+and add the following right below the connection definition:
 
 ```php
-Connections::add('default', array(
-    'type' => 'Doctrine',
-    'driver' => 'pdo_mysql',
-    'host' => 'localhost',
-    'user' => 'root',
-    'password' => 'password',
-    'dbname' => 'my_db',
-    'createEntityManager' => function(array $params) {
-        $params['eventManager']->addEventSubscriber(new \Gedmo\Timestampable\TimestampableListener());
-        $params['eventManager']->addEventSubscriber(new \Gedmo\Sluggable\SluggableListener());
-
-        return \Doctrine\ORM\EntityManager::create(
-            $params['connection'],
-            $params['configuration'],
-            $params['eventManager']
+Connections::get('default')->applyFilter('createEntityManager',
+    function($self, $params, $chain) {
+        $params['eventManager']->addEventSubscriber(
+            new \Gedmo\Timestampable\TimestampableListener()
         );
+        $params['eventManager']->addEventSubscriber(
+            new \Gedmo\Sluggable\SluggableListener()
+        );
+        return $chain->next($self, $params, $chain);
     }
-));
+);
 ```
 
 [lithium]: http://lithify.me
