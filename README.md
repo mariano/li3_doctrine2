@@ -21,7 +21,7 @@ $ cd _source/doctrine2 && git submodule update --init
 
 ## Adding the li3\_doctrine2 library ##
 
-Once you have downloaded li3_doctrine2 and placed it in your `app/libraries`,
+Once you have downloaded li3\_doctrine2 and placed it in your `app/libraries`,
 or your main `libraries` folder, you need to enable it by placing the following
 at the end of your `app/config/bootstrap/libraries.php` file:
 
@@ -141,14 +141,41 @@ class User extends \li3_doctrine2\models\BaseEntity {
 ?>
 ```
 
-### Generating the schema ###
+### Using the Doctrine shell to Generate the schema ###
 
-Once you 
+Once you have your model(s) created, you can use doctrine's shell to generate
+the schema. li3\_doctrine2 offers a wrapper for doctrine's shell that
+reutilizes lithium's connection. To run the shell stand in the core directory
+if your application and do:
+
+```bash
+$ app/libraries/li3_doctrine2/bin/doctrine
+```
+
+That will give you all the available commands. For example, to get the SQL
+you should run to create the schema for your models, do:
+
+```bash
+$ app/libraries/li3_doctrine2/bin/doctrine orm:schema-tool:create --dump-sql
+```
+
+which will give an output similar to the following:
+
+```sql
+CREATE TABLE users (
+    id INT AUTO_INCREMENT NOT NULL, 
+    email VARCHAR(255) NOT NULL, 
+    password LONGTEXT NOT NULL, 
+    name VARCHAR(255) NOT NULL, 
+    UNIQUE INDEX UNIQ_1483A5E9E7927C74 (email), 
+    PRIMARY KEY(id)
+) ENGINE = InnoDB
+```
 
 # Integrating Doctrine libraries #
 
 In this section I'll cover some of the doctrine extension libraries out there,
-and how to integrate them with li3_doctrine2.
+and how to integrate them with li3_\doctrine2.
 
 ## DoctrineExtensions ##
 
