@@ -203,7 +203,7 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
             $method = 'get' . Inflector::camelize($field);
             if (method_exists($this, $method) && is_callable(array($this, $method))) {
                 $data[$field] = $this->{$method}();
-            } elseif (property_exists($this, $field)) {
+            } elseif ($allProperties && property_exists($this, $field)) {
                 $data[$field] = $this->{$field};
             }
         }
