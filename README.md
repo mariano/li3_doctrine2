@@ -19,7 +19,7 @@ $ cd _source/doctrine2 && git submodule update --init
 
 # Usage #
 
-## Adding the li3_doctrine2 library ##
+## Adding the li3\_doctrine2 library ##
 
 Once you have downloaded li3_doctrine2 and placed it in your `app/libraries`,
 or your main `libraries` folder, you need to enable it by placing the following
@@ -31,17 +31,37 @@ Libraries::add('li3_doctrine2');
 
 ## Defining a connection ##
 
-Setting up a connection with
+Setting up a connection with li3\_doctrine2 is easy. All you need to do is
+add the following to your `app/config/bootstrap/connections.php` file (make
+sure to edit the settings to match your host, without altering the `type`
+setting):
+
+```php
+Connections::add('default', array(
+    'type' => 'Doctrine',
+    'driver' => 'pdo_mysql',
+    'host' => 'localhost',
+    'user' => 'root',
+    'password' => 'password',
+    'dbname' => 'kontractor'
+));
+```
 
 ## Creating models ##
 
 When looking to create your doctrine models, you have two choices: you can
 have them follow your custom class hierarchy (or not at all), or you could
 have them extend from the `BaseEntity` class provided by this library. The
-advantage of choosing the later is that your models will have lithium
-validation support, and are better integrated with the custom adapters (such
-as for session management, or for authorization) also provided by this
-library.
+advantage of choosing the later is that your models will have lithium's
+validation support, and can be better integrated with the custom adapters (such
+as for session management, or for authorization) provided by this library.
+
+Let us create a `User` model. Following doctrine's [basic mapping guide] 
+[doctrine-mapping-guide] we'll use annotations to define the properties (notice 
+how we are choosing to extend this model from `BaseEntity`):
+
+```php
+```
 
 # Integrating Doctrine libraries #
 
@@ -102,3 +122,4 @@ Connections::add('default', array(
 [doctrine2]: http://www.doctrine-project.org
 [license]: http://www.opensource.org/licenses/bsd-license.php
 [DoctrineExtensions]: https://github.com/l3pp4rd/DoctrineExtensions
+[doctrine-mapping-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/basic-mapping.html
