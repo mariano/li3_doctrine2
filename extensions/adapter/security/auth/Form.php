@@ -105,7 +105,6 @@ class Form extends \lithium\security\auth\adapter\Form {
     public function check($credentials, array $options = array()) {
         $data = $this->_filters($credentials->data);
         $conditions = $this->_scope + array_diff_key($data, $this->_validators);
-        var_dump($conditions); exit;
 
         $user = call_user_func(array($this->repository, $this->_config['repositoryMethod']), $conditions);
         return $user ? $this->_validate($user, $data) : false;
