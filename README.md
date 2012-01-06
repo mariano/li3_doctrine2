@@ -126,6 +126,10 @@ class User extends \li3_doctrine2\models\BaseEntity {
         $this->email = $email;
     }
 
+    public function getPassword() {
+        return $this->password;
+    }
+
     public function setPassword($password) {
         $this->password = !empty($password) ? Password::hash($password) : null;
     }
@@ -140,6 +144,10 @@ class User extends \li3_doctrine2\models\BaseEntity {
 }
 ?>
 ```
+
+You should note that if you make your model properties private, each property
+*should have* a getter and a setter method, otherwise validation and other
+features provided by `BaseEntity` won't work.
 
 ### Using the Doctrine shell to generate the schema ###
 
