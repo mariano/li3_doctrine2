@@ -52,11 +52,11 @@ Connections::add('default', array(
 ### Creating models ###
 
 When looking to create your doctrine models, you have two choices: you can
-have them follow your custom class hierarchy (or not at all), or you could
+have them follow your custom class hierarchy (or none at all), or you could
 have them extend from the `BaseEntity` class provided by this library. The
 advantage of choosing the later is that your models will have lithium's
-validation support, and can be better integrated with the custom adapters (such
-as for session management, or for authorization) provided by this library.
+validation support, and can be better integrated with the custom adapters 
+provided by this library (such as for session management or for authorization.)
 
 Let us create a `User` model. Following doctrine's [basic mapping guide] 
 [doctrine-mapping-guide] we'll use annotations to define the properties, and
@@ -141,12 +141,12 @@ class User extends \li3_doctrine2\models\BaseEntity {
 ?>
 ```
 
-### Using the Doctrine shell to Generate the schema ###
+### Using the Doctrine shell to generate the schema ###
 
 Once you have your model(s) created, you can use doctrine's shell to generate
 the schema. li3\_doctrine2 offers a wrapper for doctrine's shell that
-reutilizes lithium's connection. To run the shell stand in the core directory
-if your application and do:
+reutilizes lithium's connection details. To run the access the core directory 
+of your application and do:
 
 ```bash
 $ app/libraries/li3_doctrine2/bin/doctrine
@@ -170,6 +170,97 @@ CREATE TABLE users (
     UNIQUE INDEX UNIQ_1483A5E9E7927C74 (email), 
     PRIMARY KEY(id)
 ) ENGINE = InnoDB
+```
+
+### Getting the entity manager ###
+
+Doctrine's `EntityManager` is the way we have to interact with the underlying
+database, which means we'll always need to obtain it. You can do so by
+running the following code (change `default` to the name of your connection
+as defined in `app/config/connections.php`):
+
+```php
+$em = \lithium\data\Connections::get('default')->getEntityManager();
+```
+
+If your models extend from `BaseEntity`, then all of them have a static method
+named `getEntityManager()` (which uses a static property inherited from
+`BaseEntity` named `$connectionName` to figure out what connection to use):
+
+```php
+$em = User::getEntityManager();
+```
+
+### Fetching records ###
+
+Once you have the entity manager, you can fetch a user with ID 1 (notice how
+we use the fully qualified class name for the model) using the entity
+manager:
+
+```php
+$user = $em->find('app\models\User', 1);
+```
+
+or using model repositories:
+
+```php
+$user = $em->getRepository('app\models\User')->findOneById(1);
+```
+
+If you want to find out more about querying models with Doctrine, go through
+its [Querying guide] [doctrine-querying-guide].
+
+### Creating/Updating/Deleting records ###
+
+Records are persisted (or removed) though the entity manager, as shown in
+Doctrine's [Persisting guide] [doctrine-persisting-guide].
+
+One thing to note is that if your models extend from `BaseEntity`, you have
+validation rules defined for them, and the data you provide does not validate,
+persisting it will throw a `ValidateException` (the following example uses
+the `User` model we defined earlier):
+
+```php
+$user = new User();
+$user->setName('John Doe');
+$user->setEmail('bademail@');
+
+try {
+    $em->persist($user);
+    $em->flush();
+} catch(\li3_doctrine2\models\ValidateException $e) {
+    echo $e->getMessage();
+}
+```
+
+You should also note that `BaseEntity` provides a method named `set()` which
+comes very handy if the user data is to be populated from a form submission.
+If so, the above code could be rewritten as:
+
+```php
+$user = new User();
+$user->set($this->request->data);
+
+try {
+    $em->persist($user);
+    $em->flush();
+} catch(\li3_doctrine2\models\ValidateException $e) {
+    echo $e->getMessage();
+}
+```
+
+In this last example, if lithium's form helper is bound to the record instance,
+it will properly show validation errors. The following view code uses the
+`$user` variable from the example above to bind the form to its validation
+errors:
+
+```php
+<?php echo $this->form->create(isset($user) ? $user : null); ?>
+    <?php echo $this->form->field('email'); ?>
+    <?php echo $this->form->field('password', array('type' => 'password')); ?>
+    <?php echo $this->form->field('name'); ?>
+    <?php echo $this->form->submit('Signup'); ?>
+<?php echo $this->form->end(); ?>
 ```
 
 # Integrating Doctrine libraries #
@@ -225,3 +316,5 @@ Connections::get('default')->applyFilter('createEntityManager',
 [license]: http://www.opensource.org/licenses/bsd-license.php
 [DoctrineExtensions]: https://github.com/l3pp4rd/DoctrineExtensions
 [doctrine-mapping-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/basic-mapping.html
+[doctrine-querying-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#querying
+[doctrine-persisting-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#persisting-entities
