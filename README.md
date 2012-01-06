@@ -135,18 +135,6 @@ class User extends \li3_doctrine2\models\BaseEntity {
     public function setName($name) {
         $this->name = $name;
     }
-
-    public function isActivated() {
-        return $this->activated;
-    }
-
-    public function setActivated($activated) {
-        $this->activated = $activated;
-    }
-
-    public function getCreated() {
-        return $this->created;
-    }
 }
 ?>
 ```
