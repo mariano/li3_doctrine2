@@ -263,6 +263,101 @@ errors:
 <?php echo $this->form->end(); ?>
 ```
 
+# Extensions #
+
+li3\_doctrine2 also offers a set of extensions to integrate different parts
+of your application with your doctrine models.
+
+## Session ##
+
+Some installations require session data to be stored on a centralized location.
+While there are powerful, storage-centric solutions for session storage, using
+the database is still a popular choice.
+
+If you wish to store your session data on the database, using Doctrine models,
+then you will need to use li3\_doctrine2's session adapter. You start by
+creating the model that the library will use to represent a session record.
+For example, create a file named `Session.php` and place it in your
+`app/models` folder with the following contents:
+
+```php
+<?php
+namespace app\models;
+
+/**
+ * @Entity
+ * @Table(name="sessions")
+ */
+class Session extends \li3_doctrine2\models\BaseSession {
+}
+?>
+```
+
+We are extending from `BaseSession` since it provides us with the needed
+methods the session adapter will expect it to have. Remember to create the
+schema for this model.
+
+The final step is configuring the session. Edit your 
+`app/config/bootstrap/session.php` file and use the following to configure the
+session:
+
+```php
+Session::config(array(
+    'default' => array(
+        'adapter' => 'li3_doctrine2\extensions\adapter\session\Entity',
+        'model' => 'app\models\Session'
+    )
+));
+```
+
+If you wish to override session INI settings, use the `ini` setting. For 
+example, if you wish your session data to be valid across all subdomains, 
+replace the session definition with the following:
+
+```php
+$host = $_SERVER['HTTP_HOST'];
+if (strpos($host, '.') !== false) {
+    $host = preg_replace('/^.*?([^\.]+\.[^\.]+)$/', '\\1', $host);
+}
+Session::config(array(
+    'default' => array(
+        'adapter' => 'li3_doctrine2\extensions\adapter\session\Entity',
+        'model' => 'app\models\Session',
+        'ini' => array(
+            'cookie_domain' => '.' . $host
+        )
+    )
+));
+```
+
+## Authentication ##
+
+Even when you could easily build your own authentication library, using
+[lithium's implementation] [lithium-authentication] is highly recommended. If
+you wish to go this route, you'll need li3\_doctrine's Form adapter for
+authentication, since it allows it to interact with Doctrine models.
+
+The model you wish to use should extend from `BaseEntity` (you could still make
+it work without extending from it if you implement the needed methods). We will
+use the `User` model we created earlier.
+
+Once you have your model, you need to configure `Auth`. Edit your
+`app/config/bootstrap/session.php` and add the following to the end:
+
+```php
+use lithium\security\Auth;
+
+Auth::config(array(
+    'default' => array(
+        'adapter' => 'li3_doctrine2\extensions\adapter\security\auth\Form',
+        'model' => 'app\models\User',
+        'fields' => array('email', 'password')
+    )
+));
+```
+
+Once this is done, you can use `Auth` as usual.
+
 # Integrating Doctrine libraries #
 
 In this section I'll cover some of the doctrine extension libraries out there,
@@ -318,3 +413,4 @@ Connections::get('default')->applyFilter('createEntityManager',
 [doctrine-mapping-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/basic-mapping.html
 [doctrine-querying-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#querying
 [doctrine-persisting-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#persisting-entities
+[lithium-auth]: http://lithify.me/docs/manual/auth/simple-authentication.wiki
