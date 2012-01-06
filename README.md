@@ -84,27 +84,27 @@ class User extends \li3_doctrine2\models\BaseEntity {
      * @GeneratedValue
      * @Column(type="integer")
      */
-    protected $id;
+    private $id;
 
     /**
      * @Column(type="string",unique=true)
      */
-    protected $email;
+    private $email;
 
     /**
      * @Column(type="text")
      */
-    protected $password;
+    private $password;
 
     /**
      * @Column(type="string")
      */
-    protected $name;
+    private $name;
 
     /**
      * Validation rules
      */
-    protected $validates = array(
+    private $validates = array(
         'email' => array(
             'required' => array('notEmpty', 'message' => 'Email is required'),
             'valid' => array('email', 'message' => 'You must specify a valid email address', 'skipEmpty' => true)
