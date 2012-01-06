@@ -413,4 +413,4 @@ Connections::get('default')->applyFilter('createEntityManager',
 [doctrine-mapping-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/basic-mapping.html
 [doctrine-querying-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#querying
 [doctrine-persisting-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#persisting-entities
-[lithium-auth]: http://lithify.me/docs/manual/auth/simple-authentication.wiki
+[lithium-authentication]: http://lithify.me/docs/manual/auth/simple-authentication.wiki
