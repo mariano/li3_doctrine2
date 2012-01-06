@@ -12,8 +12,8 @@ to keep up with the latest upgrades. To do so, switch to the core directory
 holding your lithium application, and do:
 
 ```bash
-$ git submodule add https://github.com/mariano/li3_doctrine2.git app/libraries/li3_doctrine2
-$ cd app/libraries/li3_doctrine2 && git submodule update --init
+$ git submodule add https://github.com/mariano/li3_doctrine2.git libraries/li3_doctrine2
+$ cd libraries/li3_doctrine2 && git submodule update --init
 $ cd _source/doctrine2 && git submodule update --init
 ```
 
@@ -21,9 +21,9 @@ $ cd _source/doctrine2 && git submodule update --init
 
 ## Adding the li3\_doctrine2 library ##
 
-Once you have downloaded li3\_doctrine2 and placed it in your `app/libraries`,
-or your main `libraries` folder, you need to enable it by placing the following
-at the end of your `app/config/bootstrap/libraries.php` file:
+Once you have downloaded li3\_doctrine2 and placed it in your main `libraries`
+folder, or your `app/libraries` folder, you need to enable it by placing the 
+following at the end of your `app/config/bootstrap/libraries.php` file:
 
 ```php
 Libraries::add('li3_doctrine2');
@@ -157,14 +157,14 @@ reutilizes lithium's connection details. To run the access the core directory
 of your application and do:
 
 ```bash
-$ app/libraries/li3_doctrine2/bin/doctrine
+$ libraries/li3_doctrine2/bin/doctrine
 ```
 
 That will give you all the available commands. For example, to get the SQL
 you should run to create the schema for your models, do:
 
 ```bash
-$ app/libraries/li3_doctrine2/bin/doctrine orm:schema-tool:create --dump-sql
+$ libraries/li3_doctrine2/bin/doctrine orm:schema-tool:create --dump-sql
 ```
 
 which will give an output similar to the following:
@@ -382,7 +382,7 @@ To use DoctrineExtensions, you should first add it as GIT submodule. To do so,
 switch to the core directory holding your lithium application, and do:
 
 ```bash
-$ git submodule add https://github.com/l3pp4rd/DoctrineExtensions.git app/libraries/_source/DoctrineExtensions
+$ git submodule add https://github.com/l3pp4rd/DoctrineExtensions.git libraries/_source/DoctrineExtensions
 ```
 
 Next you would use your connection configuration (in `app/config/connections.php`)
@@ -392,7 +392,7 @@ to use Timestampable and Sluggable, you would first add the library in
 
 ```php
 Libraries::add('Gedmo', array(
-    'path' => LITHIUM_APP_PATH . '/libraries/_source/DoctrineExtensions/lib/Gedmo'
+    'path' => LITHIUM_LIBRARY_PATH . '/_source/DoctrineExtensions/lib/Gedmo'
 ));
 ```
 
