@@ -43,11 +43,13 @@ Connections::add('default', array(
     'host' => 'localhost',
     'user' => 'root',
     'password' => 'password',
-    'dbname' => 'kontractor'
+    'dbname' => 'my_db'
 ));
 ```
 
-## Creating models ##
+## Working with models ##
+
+### Creating models ###
 
 When looking to create your doctrine models, you have two choices: you can
 have them follow your custom class hierarchy (or not at all), or you could
@@ -138,6 +140,10 @@ class User extends \li3_doctrine2\models\BaseEntity {
 }
 ?>
 ```
+
+### Generating the schema ###
+
+Once you 
 
 # Integrating Doctrine libraries #
 
