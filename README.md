@@ -421,9 +421,10 @@ Connections::get('default')->applyFilter('createEntityManager',
 development environment is activated, though) to keep track of bottlenecks,
 and potential performance problems.
 
-One of the features it offers is the ability to show all datase queries
-executed as part of a request. In order to use that functionality with
-li3\_doctrine2, a little work has to be done. Fortunately, it's quite easy.
+One of the features it offers is the ability to show all the database queries
+that were executed as part of a request. In order to use that functionality 
+with li3\_doctrine2, a little work has to be done. Fortunately, it's quite 
+easy.
 
 Create a file named `Li3PerfSQLLogger.php` and place it in your 
 `app/libraries/_source` folder with the following contents:
@@ -435,7 +436,7 @@ namespace app\libraries\_source;
 use Doctrine\DBAL\Logging\SQLLogger;
 use li3_perf\extensions\util\Data;
 
-class Li3PerfSQLLogger implements \Doctrine\DBAL\Logging\SQLLogger {
+class Li3PerfSQLLogger implements SQLLogger {
     public function startQuery($sql, array $params = null, array $types = null) {
         Data::append('queries', array(compact('sql', 'params', 'types')));
     }
