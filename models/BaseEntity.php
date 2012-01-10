@@ -79,7 +79,7 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
     /**
      * Get the repository for this model
      *
-     * @return EntityRepository entity manager
+     * @return EntityRepository entity repository
      */
     public static function getRepository() {
         return static::getEntityManager()->getRepository(get_called_class());
