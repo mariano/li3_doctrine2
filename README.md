@@ -369,7 +369,7 @@ Once this is done, you can use `Auth` as usual.
 # Integrating libraries #
 
 In this section I'll cover some of the doctrine extension libraries out there,
-and how to integrate them with li3_\doctrine2, and also how to let 
+and how to integrate them with li3\_doctrine2, and also how to let 
 li3\_doctrine2 work with other lithium extensions that may be usable.
 
 ## DoctrineExtensions ##
