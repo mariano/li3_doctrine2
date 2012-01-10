@@ -366,10 +366,11 @@ Auth::config(array(
 
 Once this is done, you can use `Auth` as usual.
 
-# Integrating Doctrine libraries #
+# Integrating libraries #
 
 In this section I'll cover some of the doctrine extension libraries out there,
-and how to integrate them with li3_\doctrine2.
+and how to integrate them with li3_\doctrine2, and also how to let 
+li3\_doctrine2 work with other lithium extensions that may be usable.
 
 ## DoctrineExtensions ##
 
@@ -414,6 +415,59 @@ Connections::get('default')->applyFilter('createEntityManager',
 );
 ```
 
+## Li3Perf ##
+
+[li3_perf] [li3_perf] is a handy utility that you should use (only when the
+development environment is activated, though) to keep track of bottlenecks,
+and potential performance problems.
+
+One of the features it offers is the ability to show all datase queries
+executed as part of a request. In order to use that functionality with
+li3\_doctrine2, a little work has to be done. Fortunately, it's quite easy.
+
+Create a file named `Li3PerfSQLLogger.php` and place it in your 
+`app/libraries/_source` folder with the following contents:
+
+```php
+<?php
+namespace app\libraries\_source;
+
+use Doctrine\DBAL\Logging\SQLLogger;
+use li3_perf\extensions\util\Data;
+
+class Li3PerfSQLLogger implements \Doctrine\DBAL\Logging\SQLLogger {
+    public function startQuery($sql, array $params = null, array $types = null) {
+        Data::append('queries', array(compact('sql', 'params', 'types')));
+    }
+
+    public function stopQuery() {
+    }
+}
+
+?>
+```
+
+Now, we need to filter the `createEntityManager` method of the `Doctrine`
+datasource. Edit your `app/config/connections.php` file and add the following 
+right below the connection definition:
+
+```php
+Connections::get('default')->applyFilter('createEntityManager',
+    function($self, $params, $chain) {
+        if (\lithium\core\Libraries::get('li3_perf')) {
+            $params['configuration']->setSQLLogger(
+				new \app\libraries\_source\Li3PerfSQLLogger()
+			);
+        }
+        return $chain->next($self, $params, $chain);
+    }
+);
+```
+
+Notice how we are only using the logger we created if the li3\_perf library
+is activated. If so, you should now see your queries on the performance
+toolbar.
+
 [lithium]: http://lithify.me
 [doctrine2]: http://www.doctrine-project.org
 [license]: http://www.opensource.org/licenses/bsd-license.php
@@ -422,3 +476,4 @@ Connections::get('default')->applyFilter('createEntityManager',
 [doctrine-querying-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#querying
 [doctrine-persisting-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#persisting-entities
 [lithium-authentication]: http://lithify.me/docs/manual/auth/simple-authentication.wiki
+[li3_perf]: https://github.com/tmaiaroto/li3_perf
