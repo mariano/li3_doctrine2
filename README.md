@@ -437,11 +437,20 @@ use Doctrine\DBAL\Logging\SQLLogger;
 use li3_perf\extensions\util\Data;
 
 class Li3PerfSQLLogger implements SQLLogger {
+    protected $query;
+    protected $start;
+
     public function startQuery($sql, array $params = null, array $types = null) {
-        Data::append('queries', array(compact('sql', 'params', 'types')));
+        $this->start = microtime(true);
+        $this->query = compact('sql', 'params', 'types');
     }
 
     public function stopQuery() {
+        $ellapsed = (microtime(true) - $this->start) * 1000;
+        Data::append('queries', array(array_merge(
+            array('explain' => array('millis' => $ellapsed)),
+            $this->query
+        )));
     }
 }
 
