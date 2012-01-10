@@ -199,6 +199,9 @@ named `getEntityManager()` (which uses a static property inherited from
 $em = User::getEntityManager();
 ```
 
+`BaseEntity` also offers a `getRepository()` method which will return the
+repository for the model (see the section *Fetching record* below.)
+
 ### Fetching records ###
 
 Once you have the entity manager, you can fetch a user with ID 1 (notice how
@@ -213,6 +216,13 @@ or using model repositories:
 
 ```php
 $user = $em->getRepository('app\models\User')->findOneById(1);
+```
+
+If your model extends from `BaseEntity`, then the above could be retwritten
+as:
+
+```php
+$user = User::getRepository()->findOneById(1);
 ```
 
 If you want to find out more about querying models with Doctrine, go through

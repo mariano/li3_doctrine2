@@ -65,7 +65,6 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
      * Get the entity manager linked to the connection defined in the property
      * `$connectionName`
      *
-     * @see BaseEntity::$validates
      * @return EntityManager entity manager
      */
     public static function getEntityManager() {
@@ -75,6 +74,15 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
             $entityManager = $connections::get(static::$connectionName)->getEntityManager();
         }
         return $entityManager;
+    }
+
+    /**
+     * Get the repository for this model
+     *
+     * @return EntityRepository entity manager
+     */
+    public static function getRepository() {
+        return static::getEntityManager()->getRepository(get_called_class());
     }
 
     /**
