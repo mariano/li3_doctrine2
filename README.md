@@ -13,8 +13,8 @@ holding your lithium application, and do:
 
 ```bash
 $ git submodule add https://github.com/mariano/li3_doctrine2.git libraries/li3_doctrine2
-$ cd libraries/li3_doctrine2 && git submodule update --init
-$ cd _source/doctrine2 && git submodule update --init
+$ cd libraries/li3_doctrine2
+$ git submodule update --init --recursive
 ```
 
 # Usage #
