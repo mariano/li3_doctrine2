@@ -102,6 +102,11 @@ class Entity {
             throw new ConfigException("The session model {$this->config['model']} must define a getEntityManager() static method, or you must set the entityManager session config variable");
         }
 
+        $reflection = new \ReflectionClass($this->config['model']);
+        if (!$reflection->implementsInterface('li3_doctrine2\models\ISession')) {
+            throw new ConfigException("The model {$this->config['model']} must implement ISession");
+        }
+
         $this->entityManager = $this->config['entityManager'] ?:
             call_user_func($this->config['model'] . '::getEntityManager');
         if (!isset($this->entityManager) || !($this->entityManager instanceof EntityManager)) {

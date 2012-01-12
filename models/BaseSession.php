@@ -18,7 +18,23 @@ use Doctrine\ORM\Mapping\Table;
  * Base class for session models to use with the doctrine session adapter. You
  * can extend from this class to provide your own session model.
  */
-abstract class BaseSession extends BaseEntity {
+abstract class BaseSession implements ISession {
+    /**
+     * Class dependencies.
+     *
+     * @var array
+     */
+    protected static $_classes = array(
+        'connections' => 'lithium\data\Connections'
+    );
+
+    /**
+     * Connection name used for persisting / loading this record
+     *
+     * @var string
+     */
+    protected static $connectionName = 'default';
+
     /**
      * @Id
      * @Column(type="string")
@@ -36,12 +52,19 @@ abstract class BaseSession extends BaseEntity {
     protected $expires;
 
     /**
-     * Get ID
+     * Get the entity manager linked to the connection defined in the property
+     * `$connectionName`
      *
-     * @return string
+     * @see IModel::getEntityManager()
+     * @return EntityManager entity manager
      */
-    public function getId() {
-        return $this->id;
+    public static function getEntityManager() {
+        static $entityManager;
+        if (!isset($entityManager)) {
+            $connections = static::$_classes['connections'];
+            $entityManager = $connections::get(static::$connectionName)->getEntityManager();
+        }
+        return $entityManager;
     }
 
     /**

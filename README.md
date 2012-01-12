@@ -58,6 +58,9 @@ advantage of choosing the later is that your models will have lithium's
 validation support, and can be better integrated with the custom adapters 
 provided by this library (such as for session management or for authorization.)
 
+    If you still want validation support but do not wish to extend `BaseEntity`
+    your models should implement the `li3_doctrine2\models\IModel` interface.
+
 Let us create a `User` model. Following doctrine's [basic mapping guide] 
 [doctrine-mapping-guide] we'll use annotations to define the properties, and
 we will also include lithium validation rules (that's why we are choosing to 
@@ -267,7 +270,7 @@ try {
 }
 ```
 
-In this last example, if lithium's form helper is bound to the record instance,
+In this last example, if lithium's Form helper is bound to the record instance,
 it will properly show validation errors. The following view code uses the
 `$user` variable from the example above to bind the form to its validation
 errors:
@@ -284,7 +287,7 @@ errors:
 # Extensions #
 
 li3\_doctrine2 also offers a set of extensions to integrate different parts
-of your application with your doctrine models.
+of your lithium application with your doctrine models.
 
 ## Session ##
 
@@ -292,7 +295,7 @@ Some installations require session data to be stored on a centralized location.
 While there are powerful, storage-centric solutions for session storage, using
 the database is still a popular choice.
 
-If you wish to store your session data on the database, using Doctrine models,
+If you wish to store your session data on the database using Doctrine models,
 then you will need to use li3\_doctrine2's session adapter. You start by
 creating the model that the library will use to represent a session record.
 For example, create a file named `Session.php` and place it in your
@@ -312,12 +315,22 @@ class Session extends \li3_doctrine2\models\BaseSession {
 ```
 
 We are extending from `BaseSession` since it provides us with the needed
-methods the session adapter will expect it to have. Remember to create the
-schema for this model.
+methods the session adapter will expect it to have.
 
-The final step is configuring the session. Edit your 
-`app/config/bootstrap/session.php` file and use the following to configure the
-session:
+    If you still want to use the session adapter with your own Doctrine models,
+    but do not wish to extend `BaseSession`, then your session model should
+    implement the `li3_doctrine2\models\ISession` interface. You should also
+    note that if you do not pass the `entityManager` setting to the session
+    configuration, then your session model should implement a static method
+    named `getEntityManager()` that should return Doctrine's entity manager
+    for the session model. This method is not part of the interface signature
+    because it is optional, and is only used if you don't set the
+    `entityManager` session configuration setting.
+
+
+Once the model is created, create its database table using the doctrine
+console. Finally, edit your `app/config/bootstrap/session.php` file and use the 
+following to configure the session:
 
 ```php
 Session::config(array(
@@ -353,11 +366,17 @@ Session::config(array(
 Even when you could easily build your own authentication library, using
 [lithium's implementation] [lithium-authentication] is highly recommended. If
 you wish to go this route, you'll need li3\_doctrine's Form adapter for
-authentication, since it allows it to interact with Doctrine models.
+authentication, since it allows it to interact with Doctrine models. The model 
+you wish to use should extend from `BaseEntity`.
 
-The model you wish to use should extend from `BaseEntity` (you could still make
-it work without extending from it if you implement the needed methods). We will
-use the `User` model we created earlier.
+    If you still want to use the Form adapter but do not wish to extend
+    `BaseEntity`, then your model should implement the 
+    `li3_doctrine2\models\IUser` interface. You should also note that if you do 
+    not pass the `entityManager` setting to the auth configuration, then your 
+    model should implement a static method named `getEntityManager()` that 
+    should return Doctrine's entity manager for the model. This method is not 
+    part of the interface signature because it is optional, and is only used if
+    you don't set the `entityManager` session configuration setting.
 
 Once you have your model, you need to configure `Auth`. Edit your
 `app/config/bootstrap/session.php` and add the following to the end:
@@ -379,8 +398,8 @@ Once this is done, you can use `Auth` as usual.
 # Integrating libraries #
 
 In this section I'll cover some of the doctrine extension libraries out there,
-and how to integrate them with li3\_doctrine2, and also how to let 
-li3\_doctrine2 work with other lithium extensions that may be usable.
+how to integrate them with li3\_doctrine2, and how to let li3\_doctrine2 work 
+with other lithium libraries that might be of use for your application.
 
 ## DoctrineExtensions ##
 
@@ -396,10 +415,10 @@ switch to the core directory holding your lithium application, and do:
 $ git submodule add https://github.com/l3pp4rd/DoctrineExtensions.git libraries/_source/DoctrineExtensions
 ```
 
-Next you would use your connection configuration (in `app/config/connections.php`)
-to configure Doctrine with your desired behaviors. For example, if you wish
-to use Timestampable and Sluggable, you would first add the library in
-`app/config/libraries.php`:
+You would then use your connection configuration (in 
+`app/config/connections.php`) to configure Doctrine with your desired behaviors. 
+For example, if you wish to use Timestampable and Sluggable, you would first add 
+the library in `app/config/libraries.php`:
 
 ```php
 Libraries::add('Gedmo', array(
@@ -407,7 +426,7 @@ Libraries::add('Gedmo', array(
 ));
 ```
 
-And then you would filter the `createEntityManager` method in the `Doctrine`
+And then you would filter the `createEntityManager()` method in the `Doctrine`
 datasource to add the behaviors. Edit your `app/config/connections.php` file
 and add the following right below the connection definition:
 
@@ -467,7 +486,7 @@ class Li3PerfSQLLogger implements SQLLogger {
 ?>
 ```
 
-Now, we need to filter the `createEntityManager` method of the `Doctrine`
+Now, we need to filter the `createEntityManager()` method of the `Doctrine`
 datasource. Edit your `app/config/connections.php` file and add the following 
 right below the connection definition:
 
@@ -476,8 +495,8 @@ Connections::get('default')->applyFilter('createEntityManager',
     function($self, $params, $chain) {
         if (\lithium\core\Libraries::get('li3_perf')) {
             $params['configuration']->setSQLLogger(
-				new \app\libraries\_source\Li3PerfSQLLogger()
-			);
+                new \app\libraries\_source\Li3PerfSQLLogger()
+            );
         }
         return $chain->next($self, $params, $chain);
     }
@@ -485,8 +504,7 @@ Connections::get('default')->applyFilter('createEntityManager',
 ```
 
 Notice how we are only using the logger we created if the li3\_perf library
-is activated. If so, you should now see your queries on the performance
-toolbar.
+is activated. You should now see your queries on the performance toolbar.
 
 [lithium]: http://lithify.me
 [doctrine2]: http://www.doctrine-project.org

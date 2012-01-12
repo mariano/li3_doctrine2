@@ -17,7 +17,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
  * This class can be used as the base class of your doctrine models, to allow
  * for lithium validation to work on doctrine models.
  */
-abstract class BaseEntity extends \lithium\data\entity\Record {
+abstract class BaseEntity extends \lithium\data\Entity implements IModel, IUser {
     /**
      * Criteria for data validation.
      *
@@ -65,6 +65,7 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
      * Get the entity manager linked to the connection defined in the property
      * `$connectionName`
      *
+     * @see IModel::getEntityManager()
      * @return EntityManager entity manager
      */
     public static function getEntityManager() {
@@ -79,6 +80,7 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
     /**
      * Get the repository for this model
      *
+     * @see IModel::getRepository()
      * @return EntityRepository entity repository
      */
     public static function getRepository() {
@@ -123,11 +125,9 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
     /**
      * Perform validation
      *
-     * @see lithium\data\Model::validates()
+     * @see IModel::validates()
      * @param array $options Options
-     * @return boolean Returns `true` if all validation rules on all fields succeed, otherwise
-     *         `false`. After validation, the messages for any validation failures
-     *         are accessible through the `errors()` method.
+     * @return boolean Success
      */
     public function validates(array $options = array()) {
         $defaults = array(
@@ -153,6 +153,7 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
      * $record->set(array('title' => 'Lorem Ipsum', 'value' => 42));
      * }}}
      *
+     * @see IModel::validates()
      * @param array $data An associative array of fields and values to assign to this instance.
      */
     public function set(array $data) {
@@ -177,6 +178,7 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
      * Access the data fields of the record. Can also access a $named field.
      * Only returns data for fields that have a getter method defined.
      *
+     * @see IModel::validates()
      * @param string $name Optionally included field name.
      * @return mixed Entire data array if $name is empty, otherwise the value from the named field.
      */
@@ -188,6 +190,11 @@ abstract class BaseEntity extends \lithium\data\entity\Record {
         return $data;
     }
 
+    /**
+     * Get the entity fields
+     *
+     * @return array
+     */
     protected function _getEntityFields() {
         static $entityFields;
         if (!isset($entityFields)) {

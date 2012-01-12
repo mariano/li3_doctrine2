@@ -80,6 +80,11 @@ class Form extends \lithium\security\auth\adapter\Form {
             throw new ConfigException("The model {$config['model']} must define a getEntityManager() static method, or you must set the entityManager auth config variable");
         }
 
+        $reflection = new \ReflectionClass($config['model']);
+        if (!$reflection->implementsInterface('li3_doctrine2\models\IUser')) {
+            throw new ConfigException("The model {$config['model']} must implement IUser");
+        }
+
         $entityManager = $config['entityManager'] ?:
             call_user_func($config['model'] . '::getEntityManager');
         if (!isset($entityManager) || !($entityManager instanceof EntityManager)) {
