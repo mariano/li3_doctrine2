@@ -58,8 +58,8 @@ advantage of choosing the later is that your models will have lithium's
 validation support, and can be better integrated with the custom adapters 
 provided by this library (such as for session management or for authorization.)
 
-    If you still want validation support but do not wish to extend `BaseEntity`
-    your models should implement the `li3_doctrine2\models\IModel` interface.
+> If you still want validation support but do not wish to extend `BaseEntity`
+> your models should implement the `li3_doctrine2\models\IModel` interface.
 
 Let us create a `User` model. Following doctrine's [basic mapping guide] 
 [doctrine-mapping-guide] we'll use annotations to define the properties, and
@@ -317,16 +317,15 @@ class Session extends \li3_doctrine2\models\BaseSession {
 We are extending from `BaseSession` since it provides us with the needed
 methods the session adapter will expect it to have.
 
-    If you still want to use the session adapter with your own Doctrine models,
-    but do not wish to extend `BaseSession`, then your session model should
-    implement the `li3_doctrine2\models\ISession` interface. You should also
-    note that if you do not pass the `entityManager` setting to the session
-    configuration, then your session model should implement a static method
-    named `getEntityManager()` that should return Doctrine's entity manager
-    for the session model. This method is not part of the interface signature
-    because it is optional, and is only used if you don't set the
-    `entityManager` session configuration setting.
-
+> If you still want to use the session adapter with your own Doctrine models,
+> but do not wish to extend `BaseSession`, then your session model should
+> implement the `li3_doctrine2\models\ISession` interface. You should also
+> note that if you do not pass the `entityManager` setting to the session
+> configuration, then your session model should implement a static method
+> named `getEntityManager()` that should return Doctrine's entity manager
+> for the session model. This method is not part of the interface signature
+> because it is optional, and is only used if you don't set the
+> `entityManager` session configuration setting.
 
 Once the model is created, create its database table using the doctrine
 console. Finally, edit your `app/config/bootstrap/session.php` file and use the 
@@ -369,14 +368,14 @@ you wish to go this route, you'll need li3\_doctrine's Form adapter for
 authentication, since it allows it to interact with Doctrine models. The model 
 you wish to use should extend from `BaseEntity`.
 
-    If you still want to use the Form adapter but do not wish to extend
-    `BaseEntity`, then your model should implement the 
-    `li3_doctrine2\models\IUser` interface. You should also note that if you do 
-    not pass the `entityManager` setting to the auth configuration, then your 
-    model should implement a static method named `getEntityManager()` that 
-    should return Doctrine's entity manager for the model. This method is not 
-    part of the interface signature because it is optional, and is only used if
-    you don't set the `entityManager` session configuration setting.
+> If you still want to use the Form adapter but do not wish to extend
+> `BaseEntity`, then your model should implement the 
+> `li3_doctrine2\models\IUser` interface. You should also note that if you do 
+> not pass the `entityManager` setting to the auth configuration, then your 
+> model should implement a static method named `getEntityManager()` that 
+> should return Doctrine's entity manager for the model. This method is not 
+> part of the interface signature because it is optional, and is only used if
+> you don't set the `entityManager` session configuration setting.
 
 Once you have your model, you need to configure `Auth`. Edit your
 `app/config/bootstrap/session.php` and add the following to the end:
