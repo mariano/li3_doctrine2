@@ -292,7 +292,7 @@ of your lithium application with your doctrine models.
 ## Validators ##
 
 For convenience, li3\_doctrine2 adds some custom validators that require
-interaction with Doctrine2 entities. To use this validators, you will have
+interaction with Doctrine2 entities. To use these validators, you will have
 to set the `validators` option to `true` when adding the library:
 
 ```php
@@ -304,9 +304,9 @@ Libraries::add('li3_doctrine2', array(
 ### Unique validator ###
 
 This validator will fail if the value for the given field already exists for
-the model we are validating. To add this validator to a field named `$email`
-for your `User` model, you'd add the following expression to the model\'s
-`$validates` property (you'll see we also add other lithium\'s built in rules
+the model we are validating. To add this validator to a field named `email`
+for your `User` model, you'd add the following expression to the model's
+`$validates` property (you'll see we also add other lithium's built in rules
 for informational purposes only):
 
 ```php
@@ -317,7 +317,7 @@ for informational purposes only):
 )
 ```
 
-The unique validator accepts a handful of options:
+The `unique` validator accepts a handful of options:
 
 * `conditions`: Extra conditions that will be added to the default condition 
 (in the above example the default condition would be `email => value`, where
@@ -330,7 +330,7 @@ Defaults to: `getEntityManager`
 * `connection`: If the method defined in `getEntityManager` does not exist
 in the model, or is empty, a connection name is needed to obtain the model's 
 entity manager. Defaults to: `default`
-* `checkPrimaryKey`: If set to true, the model's identifier (its primary key
+* `checkPrimaryKey`: If set to `true`, the model's identifier (its primary key
 value) will be used to make sure than when looking for uniqueness, the same
 record does not trigger a failed validation. Defaults to: `true`
 
