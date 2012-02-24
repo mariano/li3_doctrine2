@@ -38,12 +38,12 @@ setting):
 
 ```php
 Connections::add('default', array(
-    'type' => 'Doctrine',
-    'driver' => 'pdo_mysql',
-    'host' => 'localhost',
-    'user' => 'root',
-    'password' => 'password',
-    'dbname' => 'my_db'
+	'type' => 'Doctrine',
+	'driver' => 'pdo_mysql',
+	'host' => 'localhost',
+	'user' => 'root',
+	'password' => 'password',
+	'dbname' => 'my_db'
 ));
 ```
 
@@ -82,68 +82,68 @@ use lithium\security\Password;
  * @Table(name="users")
  */
 class User extends \li3_doctrine2\models\BaseEntity {
-    /**
-     * @Id
-     * @GeneratedValue
-     * @Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @Id
+	 * @GeneratedValue
+	 * @Column(type="integer")
+	 */
+	private $id;
 
-    /**
-     * @Column(type="string",unique=true)
-     */
-    private $email;
+	/**
+	 * @Column(type="string",unique=true)
+	 */
+	private $email;
 
-    /**
-     * @Column(type="text")
-     */
-    private $password;
+	/**
+	 * @Column(type="text")
+	 */
+	private $password;
 
-    /**
-     * @Column(type="string")
-     */
-    private $name;
+	/**
+	 * @Column(type="string")
+	 */
+	private $name;
 
-    /**
-     * Validation rules
-     */
-    protected $validates = array(
-        'email' => array(
-            'required' => array('notEmpty', 'message' => 'Email is required'),
-            'valid' => array('email', 'message' => 'You must specify a valid email address', 'skipEmpty' => true)
-        ),
-        'password' => array('notEmpty', 'message' => 'Password must not be blank'),
-        'name' => array('notEmpty', 'message' => 'Please provide your full name')
+	/**
+	 * Validation rules
+	 */
+	protected $validates = array(
+		'email' => array(
+			'required' => array('notEmpty', 'message' => 'Email is required'),
+			'valid' => array('email', 'message' => 'You must specify a valid email address', 'skipEmpty' => true)
+		),
+		'password' => array('notEmpty', 'message' => 'Password must not be blank'),
+		'name' => array('notEmpty', 'message' => 'Please provide your full name')
 
-    );
+	);
 
-    public function getId() {
-        return $this->id;
-    }
+	public function getId() {
+		return $this->id;
+	}
 
-    public function getEmail() {
-        return $this->email;
-    }
+	public function getEmail() {
+		return $this->email;
+	}
 
-    public function setEmail($email) {
-        $this->email = $email;
-    }
+	public function setEmail($email) {
+		$this->email = $email;
+	}
 
-    public function getPassword() {
-        return $this->password;
-    }
+	public function getPassword() {
+		return $this->password;
+	}
 
-    public function setPassword($password) {
-        $this->password = !empty($password) ? Password::hash($password) : null;
-    }
+	public function setPassword($password) {
+		$this->password = !empty($password) ? Password::hash($password) : null;
+	}
 
-    public function getName() {
-        return $this->name;
-    }
+	public function getName() {
+		return $this->name;
+	}
 
-    public function setName($name) {
-        $this->name = $name;
-    }
+	public function setName($name) {
+		$this->name = $name;
+	}
 }
 ?>
 ```
@@ -174,12 +174,12 @@ which will give an output similar to the following:
 
 ```sql
 CREATE TABLE users (
-    id INT AUTO_INCREMENT NOT NULL, 
-    email VARCHAR(255) NOT NULL, 
-    password LONGTEXT NOT NULL, 
-    name VARCHAR(255) NOT NULL, 
-    UNIQUE INDEX UNIQ_1483A5E9E7927C74 (email), 
-    PRIMARY KEY(id)
+	id INT AUTO_INCREMENT NOT NULL, 
+	email VARCHAR(255) NOT NULL, 
+	password LONGTEXT NOT NULL, 
+	name VARCHAR(255) NOT NULL, 
+	UNIQUE INDEX UNIQ_1483A5E9E7927C74 (email), 
+	PRIMARY KEY(id)
 ) ENGINE = InnoDB
 ```
 
@@ -247,10 +247,10 @@ $user->setName('John Doe');
 $user->setEmail('bademail@');
 
 try {
-    $em->persist($user);
-    $em->flush();
+	$em->persist($user);
+	$em->flush();
 } catch(\li3_doctrine2\models\ValidateException $e) {
-    echo $e->getMessage();
+	echo $e->getMessage();
 }
 ```
 
@@ -263,10 +263,10 @@ $user = new User();
 $user->set($this->request->data);
 
 try {
-    $em->persist($user);
-    $em->flush();
+	$em->persist($user);
+	$em->flush();
 } catch(\li3_doctrine2\models\ValidateException $e) {
-    echo $e->getMessage();
+	echo $e->getMessage();
 }
 ```
 
@@ -277,10 +277,10 @@ errors:
 
 ```php
 <?php echo $this->form->create(isset($user) ? $user : null); ?>
-    <?php echo $this->form->field('email'); ?>
-    <?php echo $this->form->field('password', array('type' => 'password')); ?>
-    <?php echo $this->form->field('name'); ?>
-    <?php echo $this->form->submit('Signup'); ?>
+	<?php echo $this->form->field('email'); ?>
+	<?php echo $this->form->field('password', array('type' => 'password')); ?>
+	<?php echo $this->form->field('name'); ?>
+	<?php echo $this->form->submit('Signup'); ?>
 <?php echo $this->form->end(); ?>
 ```
 
@@ -288,6 +288,51 @@ errors:
 
 li3\_doctrine2 also offers a set of extensions to integrate different parts
 of your lithium application with your doctrine models.
+
+## Validators ##
+
+For convenience, li3\_doctrine2 adds some custom validators that require
+interaction with Doctrine2 entities. To use this validators, you will have
+to set the `validators` option to `true` when adding the library:
+
+```php
+Libraries::add('li3_doctrine2', array(
+	'validators' => true
+));
+```
+
+### Unique validator ###
+
+This validator will fail if the value for the given field already exists for
+the model we are validating. To add this validator to a field named `$email`
+for your `User` model, you'd add the following expression to the model\'s
+`$validates` property (you'll see we also add other lithium\'s built in rules
+for informational purposes only):
+
+```php
+'email' => array(
+	'required' => array('notEmpty', 'message' => 'Email is required'),
+	'valid' => array('email', 'message' => 'You must specify a valid email address, 'skipEmpty' => true),
+	'unique' => array('unique', 'message' => 'This email is already being used for another account, 'skipEmpty' => true)
+)
+```
+
+The unique validator accepts a handful of options:
+
+* `conditions`: Extra conditions that will be added to the default condition 
+(in the above example the default condition would be `email => value`, where
+value is the value given when submitting the form). Defaults to: `array()`.
+* `getEntityManager`: The method defined in the model that is used to
+obtain the model's entity manager. If your model extends from `BaseEntity`, the
+default will work just fine. If you don't want to extend from `BaseEntity`,
+you have to either implement this method, or use the `connection` option.
+Defaults to: `getEntityManager`
+* `connection`: If the method defined in `getEntityManager` does not exist
+in the model, or is empty, a connection name is needed to obtain the model's 
+entity manager. Defaults to: `default`
+* `checkPrimaryKey`: If set to true, the model's identifier (its primary key
+value) will be used to make sure than when looking for uniqueness, the same
+record does not trigger a failed validation. Defaults to: `true`
 
 ## Session ##
 
@@ -333,10 +378,10 @@ following to configure the session:
 
 ```php
 Session::config(array(
-    'default' => array(
-        'adapter' => 'li3_doctrine2\extensions\adapter\session\Entity',
-        'model' => 'app\models\Session'
-    )
+	'default' => array(
+		'adapter' => 'li3_doctrine2\extensions\adapter\session\Entity',
+		'model' => 'app\models\Session'
+	)
 ));
 ```
 
@@ -347,16 +392,16 @@ replace the session definition with the following:
 ```php
 $host = $_SERVER['HTTP_HOST'];
 if (strpos($host, '.') !== false) {
-    $host = preg_replace('/^.*?([^\.]+\.[^\.]+)$/', '\\1', $host);
+	$host = preg_replace('/^.*?([^\.]+\.[^\.]+)$/', '\\1', $host);
 }
 Session::config(array(
-    'default' => array(
-        'adapter' => 'li3_doctrine2\extensions\adapter\session\Entity',
-        'model' => 'app\models\Session',
-        'ini' => array(
-            'cookie_domain' => '.' . $host
-        )
-    )
+	'default' => array(
+		'adapter' => 'li3_doctrine2\extensions\adapter\session\Entity',
+		'model' => 'app\models\Session',
+		'ini' => array(
+			'cookie_domain' => '.' . $host
+		)
+	)
 ));
 ```
 
@@ -384,11 +429,11 @@ Once you have your model, you need to configure `Auth`. Edit your
 use lithium\security\Auth;
 
 Auth::config(array(
-    'default' => array(
-        'adapter' => 'li3_doctrine2\extensions\adapter\security\auth\Form',
-        'model' => 'app\models\User',
-        'fields' => array('email', 'password')
-    )
+	'default' => array(
+		'adapter' => 'li3_doctrine2\extensions\adapter\security\auth\Form',
+		'model' => 'app\models\User',
+		'fields' => array('email', 'password')
+	)
 ));
 ```
 
@@ -421,7 +466,7 @@ the library in `app/config/libraries.php`:
 
 ```php
 Libraries::add('Gedmo', array(
-    'path' => LITHIUM_LIBRARY_PATH . '/_source/DoctrineExtensions/lib/Gedmo'
+	'path' => LITHIUM_LIBRARY_PATH . '/_source/DoctrineExtensions/lib/Gedmo'
 ));
 ```
 
@@ -431,15 +476,15 @@ and add the following right below the connection definition:
 
 ```php
 Connections::get('default')->applyFilter('createEntityManager',
-    function($self, $params, $chain) {
-        $params['eventManager']->addEventSubscriber(
-            new \Gedmo\Timestampable\TimestampableListener()
-        );
-        $params['eventManager']->addEventSubscriber(
-            new \Gedmo\Sluggable\SluggableListener()
-        );
-        return $chain->next($self, $params, $chain);
-    }
+	function($self, $params, $chain) {
+		$params['eventManager']->addEventSubscriber(
+			new \Gedmo\Timestampable\TimestampableListener()
+		);
+		$params['eventManager']->addEventSubscriber(
+			new \Gedmo\Sluggable\SluggableListener()
+		);
+		return $chain->next($self, $params, $chain);
+	}
 );
 ```
 
@@ -465,21 +510,21 @@ use Doctrine\DBAL\Logging\SQLLogger;
 use li3_perf\extensions\util\Data;
 
 class Li3PerfSQLLogger implements SQLLogger {
-    protected $query;
-    protected $start;
+	protected $query;
+	protected $start;
 
-    public function startQuery($sql, array $params = null, array $types = null) {
-        $this->start = microtime(true);
-        $this->query = compact('sql', 'params', 'types');
-    }
+	public function startQuery($sql, array $params = null, array $types = null) {
+		$this->start = microtime(true);
+		$this->query = compact('sql', 'params', 'types');
+	}
 
-    public function stopQuery() {
-        $ellapsed = (microtime(true) - $this->start) * 1000;
-        Data::append('queries', array(array_merge(
-            array('explain' => array('millis' => $ellapsed)),
-            $this->query
-        )));
-    }
+	public function stopQuery() {
+		$ellapsed = (microtime(true) - $this->start) * 1000;
+		Data::append('queries', array(array_merge(
+			array('explain' => array('millis' => $ellapsed)),
+			$this->query
+		)));
+	}
 }
 
 ?>
@@ -491,14 +536,14 @@ right below the connection definition:
 
 ```php
 Connections::get('default')->applyFilter('createEntityManager',
-    function($self, $params, $chain) {
-        if (\lithium\core\Libraries::get('li3_perf')) {
-            $params['configuration']->setSQLLogger(
-                new \app\libraries\_source\Li3PerfSQLLogger()
-            );
-        }
-        return $chain->next($self, $params, $chain);
-    }
+	function($self, $params, $chain) {
+		if (\lithium\core\Libraries::get('li3_perf')) {
+			$params['configuration']->setSQLLogger(
+				new \app\libraries\_source\Li3PerfSQLLogger()
+			);
+		}
+		return $chain->next($self, $params, $chain);
+	}
 );
 ```
 
