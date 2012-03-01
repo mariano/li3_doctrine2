@@ -17,7 +17,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
  * This class can be used as the base class of your doctrine models, to allow
  * for lithium validation to work on doctrine models.
  */
-abstract class BaseEntity extends \lithium\data\Entity implements IModel, IUser {
+abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	/**
 	 * Criteria for data validation.
 	 *
