@@ -81,7 +81,10 @@ class Form extends \lithium\security\auth\adapter\Form {
 		}
 
 		$reflection = new \ReflectionClass($config['model']);
-		if (!$reflection->implementsInterface('li3_doctrine2\models\IUser')) {
+		if (
+			!$reflection->implementsInterface('li3_doctrine2\models\IModel') &&
+			!$reflection->implementsInterface('li3_doctrine2\models\IUser')
+		) {
 			throw new ConfigException("The model {$config['model']} must implement IUser");
 		}
 
