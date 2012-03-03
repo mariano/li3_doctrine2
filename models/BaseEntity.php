@@ -105,7 +105,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	public function onPrePersist(LifecycleEventArgs $eventArgs) {
 		$this->_exists = false;
 		if (!$this->validates()) {
-			throw new ValidateException($this->_errors);
+			throw new ValidateException($this);
 		}
 	}
 
@@ -118,7 +118,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	public function onPreUpdate(PreUpdateEventArgs $eventArgs) {
 		$this->_exists = true;
 		if (!$this->validates()) {
-			throw new ValidateException($this->_errors);
+			throw new ValidateException($this);
 		}
 	}
 
