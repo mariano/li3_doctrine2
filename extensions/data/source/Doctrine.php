@@ -52,7 +52,7 @@ class Doctrine extends \lithium\core\Object {
 	public function __construct(array $config = array()) {
 		$defaults = array(
 			'models' => LITHIUM_APP_PATH . '/models',
-			'proxies' => LITHIUM_APP_PATH . '/proxies',
+			'proxies' => LITHIUM_APP_PATH . '/models/proxies',
 			'proxyNamespace' => 'proxies'
 		);
 		$this->connectionSettings = array_diff_key($config, array_merge(
