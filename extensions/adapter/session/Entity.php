@@ -241,9 +241,10 @@ class Entity {
 		}
 
 		$class = get_called_class();
-		return function($self, $params, $chain) use ($class) {
-			$_SESSION[$params['key']] = $params['value'];
-			return array_key_exists($params['key'], $_SESSION);
+		return function($self, $params) use ($class) {
+			return $class::overwrite(
+				$_SESSION, Set::insert($_SESSION, $params['key'], $params['value'])
+			);
 		};
 	}
 
@@ -261,10 +262,9 @@ class Entity {
 		}
 		$class = get_called_class();
 		return function($self, $params) use ($class) {
-			if (array_key_exists($params['key'], $_SESSION)) {
-				unset($_SESSION[$params['key']]);
-			}
-			return !array_key_exists($params['key'], $_SESSION);
+			$key = $params['key'];
+			$class::overwrite($_SESSION, Set::remove($_SESSION, $key));
+			return !Set::check($_SESSION, $key);
 		};
 	}
 
@@ -380,6 +380,28 @@ class Entity {
 
 		$this->entityManager->persist($this->record);
 		$this->entityManager->flush($this->record);
+	}
+
+	/**
+	 * Overwrites session keys and values.
+	 *
+	 * @param array $old Reference to the array that needs to be overwritten. Will usually
+	 *        be `$_SESSION`.
+	 * @param array $new The data that should overwrite the keys/values in `$old`.
+	 * @return boolean Always `true`
+	 */
+	public static function overwrite(&$old, $new) {
+		if (!empty($old)) {
+			foreach ($old as $key => $value) {
+				if (!isset($new[$key])) {
+					unset($old[$key]);
+				}
+			}
+		}
+		foreach ($new as $key => $value) {
+			$old[$key] = $value;
+		}
+		return true;
 	}
 }
 ?>
