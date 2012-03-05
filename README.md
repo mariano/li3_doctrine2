@@ -258,9 +258,12 @@ You should also note that `BaseEntity` provides a method named `set()` which
 comes very handy if the user data is to be populated from a form submission.
 If so, the above code could be rewritten as:
 
+> You may notice that we send a list of field names as the second argument to
+> the `set()` method. More about this in the section *Field whitelist in set()*
+
 ```php
 $user = new User();
-$user->set($this->request->data);
+$user->set($this->request->data, array('name', 'email'));
 
 try {
 	$em->persist($user);
@@ -282,6 +285,34 @@ errors:
 	<?php echo $this->form->field('name'); ?>
 	<?php echo $this->form->submit('Signup'); ?>
 <?php echo $this->form->end(); ?>
+```
+
+#### Field whitelist in set() ####
+
+In the preceeding example, we shown the `set()` method, inherited from
+`BaseEntity`, as a convenient way to populate entity fields as a result of a
+form submission. As part of the shown `set()` usage, you may have notice a
+list of fields passed on the second argument:
+
+```php
+$user->set($this->request->data, array('name', 'email'));
+```
+
+This argument is a whitelist of fields, that specifies which fields that are
+part of the first argument (`$this->request->data` in this case) are allowed to
+be set on the entity.
+
+I've struggled against not including the whitelist argument with the idea that
+security should be enforced in the application logic. However, recent events
+in the [rails arena] [rails-fiasco] convinced me that my original intention
+of forcing a whitelist has more advantages than disadvantages.
+
+In any case, if you wish to avoid setting a whitelist, you can pass an empty
+array on the second argument, and `false` to the third argument. So the
+example below would be changed to:
+
+```php
+$user->set($this->request->data, array(), false)
 ```
 
 # Extensions #

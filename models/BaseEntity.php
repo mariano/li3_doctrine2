@@ -155,10 +155,19 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 *
 	 * @see IModel::validates()
 	 * @param array $data An associative array of fields and values to assign to this instance.
+	 * @param array $whitelist Fields to allow setting
+	 * @param bool $useWhitelist Set to false to ignore whitelist
+	 * @throws Exception
 	 */
-	public function set(array $data) {
+	public function set(array $data, array $whitelist = array(), $useWhitelist = true) {
 		if (empty($data)) {
 			return;
+		} elseif ($useWhitelist && empty($whitelist)) {
+			throw new \Exception('Must set whitelist of fields');
+		}
+
+		if ($useWhitelist) {
+			$data = array_intersect_key($data, array_flip($whitelist));
 		}
 
 		foreach($data as $field => $value) {
