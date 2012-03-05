@@ -259,7 +259,8 @@ comes very handy if the user data is to be populated from a form submission.
 If so, the above code could be rewritten as:
 
 > You may notice that we send a list of field names as the second argument to
-> the `set()` method. More about this in the section *Field whitelist in set()*
+> the `set()` method. More about this in the section *Field whitelist in 
+> BaseEntity::set()*
 
 ```php
 $user = new User();
@@ -287,18 +288,18 @@ errors:
 <?php echo $this->form->end(); ?>
 ```
 
-#### Field whitelist in set() ####
+#### Field whitelist in BaseEntity::set() ####
 
 In the preceeding example, we shown the `set()` method, inherited from
-`BaseEntity`, as a convenient way to populate entity fields as a result of a
-form submission. As part of the shown `set()` usage, you may have notice a
+`BaseEntity`, as a convenient way to populate entity fields as that come from of
+a form submission. As part of the shown `set()` usage, you may have noticed a
 list of fields passed on the second argument:
 
 ```php
 $user->set($this->request->data, array('name', 'email'));
 ```
 
-This argument is a whitelist of fields, that specifies which fields that are
+This argument is a whitelist of fields that specifies which fields that are
 part of the first argument (`$this->request->data` in this case) are allowed to
 be set on the entity.
 
@@ -309,7 +310,7 @@ of forcing a whitelist has more advantages than disadvantages.
 
 In any case, if you wish to avoid setting a whitelist, you can pass an empty
 array on the second argument, and `false` to the third argument. So the
-example below would be changed to:
+example above would be changed to:
 
 ```php
 $user->set($this->request->data, array(), false)
@@ -590,3 +591,4 @@ is activated. You should now see your queries on the performance toolbar.
 [doctrine-persisting-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#persisting-entities
 [lithium-authentication]: http://lithify.me/docs/manual/auth/simple-authentication.wiki
 [li3_perf]: https://github.com/tmaiaroto/li3_perf
+[rails-fiasco]: http://chrisacky.posterous.com/github-you-have-let-us-all-down
