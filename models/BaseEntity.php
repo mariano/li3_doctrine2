@@ -189,10 +189,11 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 *
 	 * @see IModel::validates()
 	 * @param string $name Optionally included field name.
+	 * @param bool $allProperties If true, get also properties without getter methods
 	 * @return mixed Entire data array if $name is empty, otherwise the value from the named field.
 	 */
-	public function data($name = null) {
-		$data = $this->_getData();
+	public function data($name = null, $allProperties = false) {
+		$data = $this->_getData($allProperties);
 		if (isset($name)) {
 			return array_key_exists($name, $data) ? $data[$name] : null;
 		}
