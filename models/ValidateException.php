@@ -3,13 +3,20 @@ namespace li3_doctrine2\models;
 
 class ValidateException extends \Exception {
 	protected $entity;
+	protected $errors;
 
-	public function __construct(BaseEntity $entity) {
-		$this->entity = $entity;
-		$errors = $this->getErrors();
+	public function __construct($entity) {
+		if ($entity instanceof BaseEntity) {
+			$this->entity = $entity;
+			$this->errors = $entity->errors();
+		} else {
+			$this->errors = $entity;
+		}
+
 		$message = '';
-		if (!empty($errors)) {
-			$message = current(current($errors));
+		if (!empty($this->errors)) {
+			$first = current($this->errors);
+			$message = is_array($first) ? current($first) : $first;
 		}
 		parent::__construct($message);
 	}
@@ -19,7 +26,7 @@ class ValidateException extends \Exception {
 	}
 
 	public function getErrors() {
-		return $this->entity->errors();
+		return $this->errors();
 	}
 }
 ?>
