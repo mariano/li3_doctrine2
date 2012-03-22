@@ -11,6 +11,7 @@ namespace li3_doctrine2\extensions\data\source;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Tools\Setup;
 
 /**
  * This datasource provides integration of Doctrine2 models
@@ -70,19 +71,12 @@ class Doctrine extends \lithium\core\Object {
 	 * Initialize datasource
 	 */
 	protected function _init() {
-		$this->configuration = new \Doctrine\ORM\Configuration();
-		$this->configuration->setProxyDir($this->_config['proxies']);
-		$this->configuration->setProxyNamespace(
-			$this->_config['proxyNamespace']
+		$this->configuration = Setup::createAnnotationMetadataConfiguration(
+			(array) $this->_config['models'],
+			true,
+			$this->_config['proxies']
 		);
-		$this->configuration->setMetadataCacheImpl(
-			new \Doctrine\Common\Cache\ArrayCache()
-		);
-
-		$annotationDriver = $this->configuration->newDefaultAnnotationDriver(
-			(array) $this->_config['models']
-		);
-		$this->configuration->setMetadataDriverImpl($annotationDriver);
+		$this->configuration->setProxyNamespace($this->_config['proxyNamespace']);
 
 		$this->eventManager = new \Doctrine\Common\EventManager();
 		$this->eventManager->addEventListener(array(

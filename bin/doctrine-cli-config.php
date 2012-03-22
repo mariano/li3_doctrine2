@@ -40,7 +40,6 @@ $connection = \lithium\data\Connections::get('default');
  * Continue with doctrine cli config
  */
 
-require('Doctrine/ORM/Tools/Setup.php');
 Doctrine\ORM\Tools\Setup::registerAutoloadGit(PLUGIN_PATH . '/_source/doctrine2');
 
 $em = $connection->getEntityManager();
