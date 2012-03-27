@@ -8,6 +8,7 @@
 
 namespace li3_doctrine2\extensions\data\source;
 
+use lithium\core\Environment;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -73,7 +74,7 @@ class Doctrine extends \lithium\core\Object {
 	protected function _init() {
 		$this->configuration = Setup::createAnnotationMetadataConfiguration(
 			(array) $this->_config['models'],
-			true,
+			Environment::is('development'),
 			$this->_config['proxies']
 		);
 		$this->configuration->setProxyNamespace($this->_config['proxyNamespace']);
