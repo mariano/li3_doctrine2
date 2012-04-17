@@ -6,28 +6,6 @@ $config += array(
 	'validators' => false
 );
 
-/**
- * Include libraries
- */
-
-$libsPath = dirname(dirname(__FILE__)) . '/_source/';
-$doctrinePath = $libsPath . 'doctrine2';
-
-Libraries::add('Doctrine\Common', array(
-	'path' => $doctrinePath . '/lib/vendor/doctrine-common/lib/Doctrine/Common',
-	'bootstrap' => false
-));
-
-Libraries::add('Doctrine\DBAL', array(
-	'path' => $doctrinePath . '/lib/vendor/doctrine-dbal/lib/Doctrine/DBAL',
-	'bootstrap' => false
-));
-
-Libraries::add('Doctrine\ORM', array(
-	'path' => $doctrinePath . '/lib/Doctrine/ORM',
-	'bootstrap' => false
-));
-
 if ($config['validators']) {
 	Validator::add('unique', function($value, $format, $options) {
 		$options += array(

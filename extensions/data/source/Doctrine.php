@@ -26,20 +26,6 @@ class Doctrine extends \lithium\core\Object {
 	protected $connectionSettings;
 
 	/**
-	 * Doctrine's configuration
-	 *
-	 * @var object
-	 */
-	protected $configuration;
-
-	/**
-	 * Doctrine's event manager
-	 *
-	 * @var object
-	 */
-	protected $eventManager;
-
-	/**
 	 * Doctrine's entity manager
 	 *
 	 * @var object
@@ -69,25 +55,6 @@ class Doctrine extends \lithium\core\Object {
 	}
 
 	/**
-	 * Initialize datasource
-	 */
-	protected function _init() {
-		$this->configuration = Setup::createAnnotationMetadataConfiguration(
-			(array) $this->_config['models'],
-			Environment::is('development'),
-			$this->_config['proxies']
-		);
-		$this->configuration->setProxyNamespace($this->_config['proxyNamespace']);
-
-		$this->eventManager = new \Doctrine\Common\EventManager();
-		$this->eventManager->addEventListener(array(
-			Events::postLoad,
-			Events::prePersist,
-			Events::preUpdate
-		), $this);
-	}
-
-	/**
 	 * Create an entity manager
 	 *
 	 * @param array $params Parameters
@@ -95,9 +62,23 @@ class Doctrine extends \lithium\core\Object {
 	 * @filter
 	 */
 	protected function createEntityManager() {
+		\Doctrine\ORM\Tools\Setup::registerAutoloadGit(dirname(dirname(dirname(dirname(__FILE__)))) . '/_source/doctrine2');
+
+		$configuration = Setup::createAnnotationMetadataConfiguration(
+			(array) $this->_config['models'],
+			Environment::is('development'),
+			$this->_config['proxies']
+		);
+		$configuration->setProxyNamespace($this->_config['proxyNamespace']);
+
+		$eventManager = new \Doctrine\Common\EventManager();
+		$eventManager->addEventListener(array(
+			Events::postLoad,
+			Events::prePersist,
+			Events::preUpdate
+		), $this);
+
 		$connection = $this->connectionSettings;
-		$configuration = $this->configuration;
-		$eventManager = $this->eventManager;
 		$params = compact('connection', 'configuration', 'eventManager');
 		return $this->_filter(__METHOD__, $params,
 			function($self, $params) {

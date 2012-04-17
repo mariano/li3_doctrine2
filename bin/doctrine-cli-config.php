@@ -40,6 +40,11 @@ $connection = \lithium\data\Connections::get('default');
  * Continue with doctrine cli config
  */
 
+require_once(PLUGIN_PATH . '/_source/doctrine2/lib/Doctrine/ORM/Tools/Setup.php');
+
+$loader = new \Doctrine\Common\ClassLoader('Doctrine\DBAL\Migrations', PLUGIN_PATH . '/_source/migrations/lib');
+$loader->register();
+
 Doctrine\ORM\Tools\Setup::registerAutoloadGit(PLUGIN_PATH . '/_source/doctrine2');
 
 $em = $connection->getEntityManager();
