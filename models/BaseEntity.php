@@ -83,12 +83,15 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 * Get the entity manager linked to the connection defined in the property
 	 * `$connectionName`
 	 *
+	 * @param string $connectionName Connection name, or use the property `$connectionName` if empty
 	 * @see IModel::getEntityManager()
 	 * @return EntityManager entity manager
 	 */
-	public static function getEntityManager() {
+	public static function getEntityManager($connectionName = null) {
 		static $entityManagers = array();
-		$connectionName = static::getConnectionName();
+		if (!$connectionName) {
+			$connectionName = static::getConnectionName();
+		}
 		if (!isset($entityManager[$connectionName])) {
 			$connections = static::$_classes['connections'];
 			$entityManagers[$connectionName] = $connections::get($connectionName)->getEntityManager();
@@ -99,11 +102,12 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	/**
 	 * Get the repository for this model
 	 *
+	 * @param string $connectionName Connection name, or use the property `$connectionName` if empty
 	 * @see IModel::getRepository()
 	 * @return EntityRepository entity repository
 	 */
-	public static function getRepository() {
-		return static::getEntityManager()->getRepository(get_called_class());
+	public static function getRepository($connectionName = null) {
+		return static::getEntityManager($connectionName)->getRepository(get_called_class());
 	}
 
 	/**
