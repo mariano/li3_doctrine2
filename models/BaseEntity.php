@@ -62,6 +62,24 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	}
 
 	/**
+	 * Get connection name
+	 *
+	 * @return string Connection name
+	 */
+	public static function getConnectionName() {
+		return static::$connectionName;
+	}
+
+	/**
+	 * Change the connection name
+	 *
+	 * @param string $connectionName Connection name
+	 */
+	public static function setConnectionName($connectionName) {
+		static::$connectionName = $connectionName;
+	}
+
+	/**
 	 * Get the entity manager linked to the connection defined in the property
 	 * `$connectionName`
 	 *
@@ -69,12 +87,13 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 * @return EntityManager entity manager
 	 */
 	public static function getEntityManager() {
-		static $entityManager;
-		if (!isset($entityManager)) {
+		static $entityManagers = array();
+		$connectionName = static::getConnectionName();
+		if (!isset($entityManager[$connectionName])) {
 			$connections = static::$_classes['connections'];
-			$entityManager = $connections::get(static::$connectionName)->getEntityManager();
+			$entityManagers[$connectionName] = $connections::get($connectionName)->getEntityManager();
 		}
-		return $entityManager;
+		return $entityManagers[$connectionName];
 	}
 
 	/**
