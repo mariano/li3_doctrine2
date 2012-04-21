@@ -47,6 +47,42 @@ Connections::add('default', array(
 ));
 ```
 
+### Working with master-slave connections ###
+
+Thanks to Doctrine, master/slave connection queries can be done quite easy. All
+you have to do is slightly change your connection definition so you can use
+the `MasterSlaveConnection` wrapper class, and instead of simply specifying a 
+single server, you give the details for the master server, and each of the 
+slave servers. Example:
+
+```php
+Connections::add('default', array(
+	'type' => 'Doctrine',
+	'driver' => 'pdo_mysql',
+	'wrapperClass' => 'Doctrine\DBAL\Connections\MasterSlaveConnection',
+    'master' => array(
+		'host' => 'master.example.com',
+		'user' => 'root',
+		'password' => 'password',
+		'dbname' => 'my_db'
+	),
+    'slaves' => array(
+		array(
+			'host' => 'slave1.example.com',
+			'user' => 'root',
+			'password' => 'password',
+			'dbname' => 'my_db'
+		),
+		array(
+			'host' => 'slave2.example.com',
+			'user' => 'root',
+			'password' => 'password',
+			'dbname' => 'my_db'
+		)
+    )
+));
+```
+
 ## Working with models ##
 
 ### Creating models ###
