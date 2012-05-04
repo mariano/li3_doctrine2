@@ -9,11 +9,11 @@ class ValidateException extends \Exception {
 		if ($entity instanceof BaseEntity) {
 			$this->entity = $entity;
 			$this->errors = $entity->errors();
-		} else {
+		} else if (is_array($entity)) {
 			$this->errors = $entity;
 		}
 
-		$message = '';
+		$message = is_string($entity) ? $entity : '';
 		if (!empty($this->errors)) {
 			$first = current($this->errors);
 			$message = is_array($first) ? current($first) : $first;
@@ -25,8 +25,16 @@ class ValidateException extends \Exception {
 		return $this->entity;
 	}
 
+	public function setEntity($entity) {
+		$this->entity = $entity;
+	}
+
 	public function getErrors() {
 		return $this->errors;
+	}
+
+	public function setErrors($errors) {
+		$this->errors = $errors;
 	}
 }
 ?>
