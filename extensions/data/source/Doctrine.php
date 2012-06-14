@@ -68,7 +68,7 @@ class Doctrine extends \lithium\data\Source {
 		Setup::registerAutoloadGit($doctrinePath);
 
 		$configuration = Setup::createAnnotationMetadataConfiguration(
-			(array) $this->_config['models'],
+			array($this->_config['models']),
 			Environment::is('development'),
 			$this->_config['proxies']
 		);
