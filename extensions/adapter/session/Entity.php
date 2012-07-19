@@ -8,6 +8,7 @@
 
 namespace li3_doctrine2\extensions\adapter\session;
 
+use \RuntimeException;
 use Doctrine\ORM\EntityManager;
 use lithium\core\ConfigException;
 use lithium\core\Libraries;
@@ -140,12 +141,22 @@ class Entity {
 	}
 
 	/**
+	 * Manually start the session
+	 */
+	public function start() {
+		$this->_startup();
+	}
+
+	/**
 	 * Starts the session.
 	 *
 	 * @return boolean True if session successfully started (or has already been started),
 	 *		   false otherwise.
 	 */
 	protected function _startup() {
+		if (!$this->config['start']) {
+			return;
+		}
 		if (session_id()) {
 			return true;
 		}
@@ -186,11 +197,11 @@ class Entity {
 	 * @return closure Function returning boolean `true` if the key exists, `false` otherwise.
 	 */
 	public function check($key, array $options = array()) {
-		if (!$this->isStarted() && !$this->_startup()) {
+		if (!$this->isStarted() && $this->_startup() === false) {
 			throw new RuntimeException("Could not start session");
 		}
 		return function($self, $params) {
-			return Set::check($_SESSION, $params['key']);
+			return isset($_SESSION) ? Set::check($_SESSION, $params['key']) : false;
 		};
 	}
 
@@ -203,11 +214,14 @@ class Entity {
 	 * @return closure Function returning data in the session if successful, `false` otherwise.
 	 */
 	public function read($key = null, array $options = array()) {
-		if (!$this->isStarted() && !$this->_startup()) {
+		if (!$this->isStarted() && $this->_startup() === false) {
 			throw new RuntimeException("Could not start session");
 		}
 
 		return function($self, $params) {
+			if (!isset($_SESSION)) {
+				return false;
+			}
 			$key = $params['key'];
 			if (!$key) {
 				return $_SESSION;
@@ -236,12 +250,15 @@ class Entity {
 	 * @return closure Function returning boolean `true` on successful write, `false` otherwise.
 	 */
 	public function write($key, $value, array $options = array()) {
-		if (!$this->isStarted() && !$this->_startup()) {
+		if (!$this->isStarted() && $this->_startup() === false) {
 			throw new RuntimeException("Could not start session");
 		}
 
 		$class = get_called_class();
 		return function($self, $params) use ($class) {
+			if (!isset($_SESSION)) {
+				return false;
+			}
 			return $class::overwrite(
 				$_SESSION, Set::insert($_SESSION, $params['key'], $params['value'])
 			);
@@ -257,11 +274,14 @@ class Entity {
 	 *		   in the session, `false` otherwise
 	 */
 	public function delete($key, array $options = array()) {
-		if (!$this->isStarted() && !$this->_startup()) {
+		if (!$this->isStarted() && $this->_startup() === false) {
 			throw new RuntimeException("Could not start session");
 		}
 		$class = get_called_class();
 		return function($self, $params) use ($class) {
+			if (!isset($_SESSION)) {
+				return false;
+			}
 			$key = $params['key'];
 			$class::overwrite($_SESSION, Set::remove($_SESSION, $key));
 			return !Set::check($_SESSION, $key);
@@ -275,7 +295,7 @@ class Entity {
 	 * @return closure Function returning boolean `true` on successful clear, `false` otherwise.
 	 */
 	public function clear(array $options = array()) {
-		if (!$this->isStarted() && !$this->_startup()) {
+		if (!$this->isStarted() && $this->_startup() === false) {
 			throw new RuntimeException("Could not start session");
 		}
 		return function($self, $params) {
