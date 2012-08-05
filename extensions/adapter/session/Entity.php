@@ -53,13 +53,13 @@ class Entity {
 	 * @var array
 	 */
 	protected $config = array(
-		'start' => true,
-		'model' => null,
-		'entityManager' => null,
+		'start' => TRUE,
+		'model' => NULL,
+		'entityManager' => NULL,
 		'expiration' => '+3 days',
 		'ini' => array(
 			'cookie_lifetime' => '0',
-			'cookie_httponly' => false,
+			'cookie_httponly' => FALSE,
 			'gc_divisor' => 100
 		)
 	);
@@ -89,7 +89,8 @@ class Entity {
 	 * Sets up the adapter with the configuration assigned by the `Session` class.
 	 *
 	 * @param array $config Available configuration options for this adapter:
-	 *				- `'config'` _string_: The name of the model that this adapter should use.
+	 *                - `'config'` _string_: The name of the model that this adapter should use.
+	 * @throws \lithium\core\ConfigException
 	 */
 	public function __construct(array $config = array()) {
 		$this->config = Set::merge($this->config, $config);
@@ -119,7 +120,7 @@ class Entity {
 		foreach ($this->config['ini'] as $key => $config) {
 			if (
 				isset($this->config['ini'][$key]) &&
-				ini_set("session.{$key}", $this->config['ini'][$key]) === false
+				ini_set("session.{$key}", $this->config['ini'][$key]) === FALSE
 			) {
 				throw new ConfigException("Could not initialize the session variable {$key}");
 			}
@@ -158,7 +159,7 @@ class Entity {
 			return;
 		}
 		if (session_id()) {
-			return true;
+			return TRUE;
 		}
 		if (!isset($_SESSION)) {
 			session_cache_limiter('nocache');
@@ -172,11 +173,11 @@ class Entity {
 	 * @param string $key Optional. If specified, sets the session ID to the value of `$key`.
 	 * @return mixed Session ID, or `null` if the session has not been started.
 	 */
-	public function key($key = null) {
+	public function key($key = NULL) {
 		if ($key) {
 			return session_id($key);
 		}
-		return session_id() ?: null;
+		return session_id() ?: NULL;
 	}
 
 	/**
@@ -194,14 +195,15 @@ class Entity {
 	 *
 	 * @param string $key Key of the entry to be checked.
 	 * @param array $options Options array. Not used for this adapter method.
+	 * @throws \RuntimeException
 	 * @return closure Function returning boolean `true` if the key exists, `false` otherwise.
 	 */
 	public function check($key, array $options = array()) {
-		if (!$this->isStarted() && $this->_startup() === false) {
+		if (!$this->isStarted() && $this->_startup() === FALSE) {
 			throw new RuntimeException("Could not start session");
 		}
 		return function($self, $params) {
-			return isset($_SESSION) ? Set::check($_SESSION, $params['key']) : false;
+			return isset($_SESSION) ? Set::check($_SESSION, $params['key']) : FALSE;
 		};
 	}
 
@@ -209,25 +211,26 @@ class Entity {
 	 * Read a value from the session.
 	 *
 	 * @param null|string $key Key of the entry to be read. If no key is passed, all
-	 *		  current session data is returned.
+	 *          current session data is returned.
 	 * @param array $options Options array. Not used for this adapter method.
+	 * @throws \RuntimeException
 	 * @return closure Function returning data in the session if successful, `false` otherwise.
 	 */
-	public function read($key = null, array $options = array()) {
-		if (!$this->isStarted() && $this->_startup() === false) {
+	public function read($key = NULL, array $options = array()) {
+		if (!$this->isStarted() && $this->_startup() === FALSE) {
 			throw new RuntimeException("Could not start session");
 		}
 
 		return function($self, $params) {
 			if (!isset($_SESSION)) {
-				return false;
+				return FALSE;
 			}
 			$key = $params['key'];
 			if (!$key) {
 				return $_SESSION;
 			}
-			if (strpos($key, '.') === false) {
-				return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
+			if (strpos($key, '.') === FALSE) {
+				return isset($_SESSION[$key]) ? $_SESSION[$key] : NULL;
 			}
 			$filter  = function($keys, $data) use (&$filter) {
 				$key = array_shift($keys);
@@ -247,17 +250,18 @@ class Entity {
 	 * @param string $key Key of the item to be stored.
 	 * @param mixed $value The value to be stored.
 	 * @param array $options Options array. Not used for this adapter method.
+	 * @throws \RuntimeException
 	 * @return closure Function returning boolean `true` on successful write, `false` otherwise.
 	 */
 	public function write($key, $value, array $options = array()) {
-		if (!$this->isStarted() && $this->_startup() === false) {
+		if (!$this->isStarted() && $this->_startup() === FALSE) {
 			throw new RuntimeException("Could not start session");
 		}
 
 		$class = get_called_class();
 		return function($self, $params) use ($class) {
 			if (!isset($_SESSION)) {
-				return false;
+				return FALSE;
 			}
 			return $class::overwrite(
 				$_SESSION, Set::insert($_SESSION, $params['key'], $params['value'])
@@ -270,17 +274,18 @@ class Entity {
 	 *
 	 * @param string $key The key to be deleted
 	 * @param array $options Options array. Not used for this adapter method.
+	 * @throws \RuntimeException
 	 * @return closure Function returning boolean `true` if the key no longer exists
-	 *		   in the session, `false` otherwise
+	 *           in the session, `false` otherwise
 	 */
 	public function delete($key, array $options = array()) {
-		if (!$this->isStarted() && $this->_startup() === false) {
+		if (!$this->isStarted() && $this->_startup() === FALSE) {
 			throw new RuntimeException("Could not start session");
 		}
 		$class = get_called_class();
 		return function($self, $params) use ($class) {
 			if (!isset($_SESSION)) {
-				return false;
+				return FALSE;
 			}
 			$key = $params['key'];
 			$class::overwrite($_SESSION, Set::remove($_SESSION, $key));
@@ -292,10 +297,11 @@ class Entity {
 	 * Clears all keys from the session.
 	 *
 	 * @param array $options Options array. Not used fro this adapter method.
+	 * @throws \RuntimeException
 	 * @return closure Function returning boolean `true` on successful clear, `false` otherwise.
 	 */
 	public function clear(array $options = array()) {
-		if (!$this->isStarted() && $this->_startup() === false) {
+		if (!$this->isStarted() && $this->_startup() === FALSE) {
 			throw new RuntimeException("Could not start session");
 		}
 		return function($self, $params) {
@@ -315,7 +321,7 @@ class Entity {
 	public function _open($path, $name) {
 		$id = $this->key();
 		if (isset($this->record)) {
-			$this->record = null;
+			$this->record = NULL;
 		}
 
 		if ($id) {
@@ -340,7 +346,7 @@ class Entity {
 	 */
 	public function _close() {
 		unset($this->record);
-		return true;
+		return TRUE;
 	}
 
 	/**
@@ -375,8 +381,9 @@ class Entity {
 	/**
 	 * The session save handler callback for reading data from the session.
 	 *
-	 * @param string $key The key of the data to be returned. If no key is specified,
-	 *		  then all session data is returned in an array of key/value pairs.
+	 * @param $id
+	 * @internal param string $key The key of the data to be returned. If no key is specified,
+	 *          then all session data is returned in an array of key/value pairs.
 	 * @return mixed Value corresponding to key if set, null otherwise.
 	 */
 	public function _read($id) {
@@ -386,8 +393,10 @@ class Entity {
 	/**
 	 * The session save handler callback for writing data to the session.
 	 *
-	 * @param string $key The key of the data to be returned.
-	 * @param mixed $value The value to be written to the session.
+	 * @param $id
+	 * @param $data
+	 * @internal param string $key The key of the data to be returned.
+	 * @internal param mixed $value The value to be written to the session.
 	 * @return boolean True if write was successful, false otherwise.
 	 */
 	public function _write($id, $data) {
@@ -395,7 +404,7 @@ class Entity {
 		$expires->add(\DateInterval::createFromDateString($this->config['expiration']));
 
 		$this->record->setId($id);
-		$this->record->setData($data ?: null);
+		$this->record->setData($data ?: NULL);
 		$this->record->setExpires($expires);
 
 		$this->entityManager->persist($this->record);
@@ -421,7 +430,7 @@ class Entity {
 		foreach ($new as $key => $value) {
 			$old[$key] = $value;
 		}
-		return true;
+		return TRUE;
 	}
 }
 ?>
