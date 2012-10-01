@@ -1,6 +1,8 @@
 <?php
 namespace li3_doctrine2\models;
 
+use lithium\data\Entity;
+
 class ValidateException extends \Exception {
 	protected $entity;
 	protected $errors;
@@ -10,7 +12,7 @@ class ValidateException extends \Exception {
 			return parent::__construct();
 		}
 
-		if ($entity instanceof BaseEntity) {
+		if ($entity instanceof Entity) {
 			$this->entity = $entity;
 			$this->errors = $entity->errors();
 		} else if (is_array($entity)) {
