@@ -260,5 +260,14 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 		}
 		return $data;
 	}
+
+	/**
+	 * String representation
+	 *
+	 * @return string String representation
+	 */
+    public function __toString() {
+		return get_class($this) . '@' . spl_object_hash($this);
+	}
 }
 ?>
