@@ -16,14 +16,14 @@ interface IModel {
 	/**
 	 * Get the entity manager for this model
 	 *
-	 * @return \Doctrine\ORM\EntityManager entity manager
+	 * @return EntityManager entity manager
 	 */
 	public static function getEntityManager();
 
 	/**
 	 * Get the repository for this model
 	 *
-	 * @return \Doctrine\ORM\EntityRepository entity repository
+	 * @return EntityRepository entity repository
 	 */
 	public static function getRepository();
 

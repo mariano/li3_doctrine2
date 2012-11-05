@@ -56,7 +56,7 @@ abstract class BaseSession implements ISession {
 	 * `$connectionName`
 	 *
 	 * @see IModel::getEntityManager()
-	 * @return \Doctrine\ORM\EntityManager entity manager
+	 * @return EntityManager entity manager
 	 */
 	public static function getEntityManager() {
 		static $entityManager;
@@ -97,7 +97,7 @@ abstract class BaseSession implements ISession {
 	/**
 	 * Set expiration date
 	 *
-	 * @param \DateTime $expires Expiration date
+	 * @param DateTime $expires Expiration date
 	 */
 	public function setExpires(\DateTime $expires) {
 		$this->expires = $expires;

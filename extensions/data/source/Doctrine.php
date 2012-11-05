@@ -28,7 +28,7 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Doctrine's entity manager
 	 *
-	 * @var \Doctrine\ORM\EntityManager
+	 * @var object
 	 */
 	protected $entityManager;
 
@@ -45,10 +45,10 @@ class Doctrine extends \lithium\data\Source {
 		);
 		$this->connectionSettings = array_diff_key($config, array_merge(
 			$defaults, array(
-				'type' => NULL,
-				'adapter' => NULL,
-				'login' => NULL,
-				'filters' => NULL
+				'type' => null,
+				'adapter' => null,
+				'login' => null,
+				'filters' => null
 			)
 		));
 		parent::__construct($config + $defaults);
@@ -57,8 +57,8 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Create an entity manager
 	 *
-	 * @internal param array $params Parameters
-	 * @return \Doctrine\ORM\EntityManager Entity manager
+	 * @param array $params Parameters
+	 * @return object Entity manager
 	 * @filter
 	 */
 	protected function createEntityManager() {
@@ -97,7 +97,7 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Get the entity manager
 	 *
-	 * @return \Doctrine\ORM\EntityManager Entity Manager
+	 * @return object Entity Manager
 	 */
 	public function getEntityManager() {
 		if (!isset($this->entityManager)) {
@@ -109,8 +109,7 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Event executed after a record was loaded
 	 *
-	 * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
-	 * @return void
+	 * @param object $eventArgs Event arguments
 	 */
 	public function postLoad(LifecycleEventArgs $eventArgs) {
 		$this->dispatchEntityEvent($eventArgs->getEntity(), 'onPostLoad',
@@ -121,8 +120,7 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Event executed before a record is to be created
 	 *
-	 * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
-	 * @return void
+	 * @param object $eventArgs Event arguments
 	 */
 	public function prePersist(LifecycleEventArgs $eventArgs) {
 		$this->dispatchEntityEvent($eventArgs->getEntity(), 'onPrePersist',
@@ -133,8 +131,7 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Event executed before a record is to be updated
 	 *
-	 * @param \Doctrine\ORM\Event\PreUpdateEventArgs $eventArgs Event arguments
-	 * @return void
+	 * @param object $eventArgs Event arguments
 	 */
 	public function preUpdate(PreUpdateEventArgs $eventArgs) {
 		$this->dispatchEntityEvent($eventArgs->getEntity(), 'onPreUpdate',
@@ -146,10 +143,8 @@ class Doctrine extends \lithium\data\Source {
 	 * Dispatch an entity event
 	 *
 	 * @param object $entity Entity on where to dispatch event
-	 * @param $eventName
+	 * @param string $event Event name
 	 * @param array $args Event arguments
-	 * @return void
-	 * @internal param string $event Event name
 	 */
 	protected function dispatchEntityEvent($entity, $eventName, array $args) {
 		if (
@@ -176,8 +171,9 @@ class Doctrine extends \lithium\data\Source {
 	 *
 	 * @param string $class The fully-name-spaced class name of the object making the request.
 	 * @return array Returns an array of objects to which models can connect.
+	 * @todo
 	 */
-	public function sources($class = NULL) {}
+	public function sources($class = null) {}
 
 	/**
 	 * Gets the column schema for a given entity (such as a database table).
@@ -190,15 +186,16 @@ class Doctrine extends \lithium\data\Source {
 	 *         array keys are the available fields, and the values are arrays describing each
 	 *         field, containing the following keys:
 	 *         - `'type'`: The field type name
+	 * @todo
 	 */
 	public function describe($entity, array $meta = array()) {}
 
 	/**
 	 * Defines or modifies the default settings of a relationship between two models.
 	 *
-	 * @param string $class the primary model of the relationship
-	 * @param string $type the type of the relationship (hasMany, hasOne, belongsTo)
-	 * @param string $name the name of the relationship
+	 * @param $class the primary model of the relationship
+	 * @param $type the type of the relationship (hasMany, hasOne, belongsTo)
+	 * @param $name the name of the relationship
 	 * @param array $options relationship options
 	 * @return array Returns an array containing the configuration for a model relationship.
 	 */
@@ -210,6 +207,7 @@ class Doctrine extends \lithium\data\Source {
 	 * @param mixed $query
 	 * @param array $options
 	 * @return boolean Returns true if the operation was a success, otherwise false.
+	 * @todo
 	 */
 	public function create($query, array $options = array()) {}
 
@@ -219,6 +217,7 @@ class Doctrine extends \lithium\data\Source {
 	 * @param mixed $query
 	 * @param array $options
 	 * @return boolean Returns true if the operation was a success, otherwise false.
+	 * @todo
 	 */
 	public function read($query, array $options = array()) {}
 
@@ -231,6 +230,7 @@ class Doctrine extends \lithium\data\Source {
 	 *        query string.
 	 * @param array $options Options to execute, which are defined by the concrete implementation.
 	 * @return boolean Returns true if the update operation was a success, otherwise false.
+	 * @todo
 	 */
 	public function update($query, array $options = array()) {}
 
@@ -240,6 +240,7 @@ class Doctrine extends \lithium\data\Source {
 	 * @param mixed $query
 	 * @param array $options
 	 * @return boolean Returns true if the operation was a success, otherwise false.
+	 * @todo
 	 */
 	public function delete($query, array $options = array()) {}
 }

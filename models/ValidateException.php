@@ -5,7 +5,7 @@ class ValidateException extends \Exception {
 	protected $entity;
 	protected $errors;
 
-	public function __construct($entity = NULL) {
+	public function __construct($entity = null) {
 		if (empty($entity)) {
 			return parent::__construct();
 		}

@@ -47,29 +47,28 @@ class Form extends \lithium\security\auth\adapter\Form {
 	 *
 	 * @see lithium\security\auth\adapter\Form::$__construct
 	 * @param array $config Sets the configuration for the adapter, which has the following options:
-	 *                - `'model'` _string_: The name of the model class to use. See the `$_model`
-	 *                  property for details.
-	 *                - `'fields'` _array_: The model fields to query against when taking input from
-	 *                  the request data. See the `$_fields` property for details.
-	 *                - `'scope'` _array_: Any additional conditions used to constrain the
-	 *                  authentication query. For example, if active accounts in an application have
-	 *                  an `active` field which must be set to `true`, you can specify
-	 *                  `'scope' => array('active' => true)`. See the `$_scope` property for more
-	 *                  details.
-	 *                - `'filters'` _array_: Named callbacks to apply to request data before the user
-	 *                  lookup query is generated. See the `$_filters` property for more details.
-	 *                - `'validators'` _array_: Named callbacks to apply to fields in request data and
-	 *                  corresponding fields in database data in order to do programmatic
-	 *                  authentication checks after the query has occurred. See the `$_validators`
-	 *                  property for more details.
-	 *                - `'query'` _string_: Determines the model method to invoke for authentication
-	 *                  checks. See the `$_query` property for more details.
-	 * @throws \lithium\core\ConfigException
+	 *				- `'model'` _string_: The name of the model class to use. See the `$_model`
+	 *				  property for details.
+	 *				- `'fields'` _array_: The model fields to query against when taking input from
+	 *				  the request data. See the `$_fields` property for details.
+	 *				- `'scope'` _array_: Any additional conditions used to constrain the
+	 *				  authentication query. For example, if active accounts in an application have
+	 *				  an `active` field which must be set to `true`, you can specify
+	 *				  `'scope' => array('active' => true)`. See the `$_scope` property for more
+	 *				  details.
+	 *				- `'filters'` _array_: Named callbacks to apply to request data before the user
+	 *				  lookup query is generated. See the `$_filters` property for more details.
+	 *				- `'validators'` _array_: Named callbacks to apply to fields in request data and
+	 *				  corresponding fields in database data in order to do programmatic
+	 *				  authentication checks after the query has occurred. See the `$_validators`
+	 *				  property for more details.
+	 *				- `'query'` _string_: Determines the model method to invoke for authentication
+	 *				  checks. See the `$_query` property for more details.
 	 */
 	public function __construct(array $config = array()) {
 		$config += array(
-			'model' => NULL,
-			'entityManager' => NULL,
+			'model' => null,
+			'entityManager' => null,
 			'repositoryMethod' => 'findOneBy'
 		);
 		if (empty($config['model']) || !class_exists($config['model'])) {
@@ -109,17 +108,17 @@ class Form extends \lithium\security\auth\adapter\Form {
 	 *				 class for further details.
 	 * @param array $options Additional configuration options. Not currently implemented in this
 	 *				adapter.
-	 * @return array|bool Returns an array containing user information on success, or `false` on failure.
+	 * @return array Returns an array containing user information on success, or `false` on failure.
 	 */
 	public function check($credentials, array $options = array()) {
 		$data = $this->_filters($credentials->data);
 		if (count(array_filter($data)) === 0) {
-			return FALSE;
+			return false;
 		}
 		$conditions = $this->_scope + array_diff_key($data, $this->_validators);
 
 		$user = call_user_func(array($this->repository, $this->_config['repositoryMethod']), $conditions);
-		return $user ? $this->_validate($user, $data) : FALSE;
+		return $user ? $this->_validate($user, $data) : false;
 	}
 }
 

@@ -12,7 +12,6 @@ use lithium\util\Inflector;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use li3_doctrine2\models\ValidateException;
 
 /**
  * This class can be used as the base class of your doctrine models, to allow
@@ -55,11 +54,6 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	protected static $connectionName = 'default';
 
 	/**
-	 * @var bool
-	 */
-	protected $_exists = FALSE;
-
-	/**
 	 * Constructor, instance at which the entity fields are loaded from
 	 * doctrine's class metadata
 	 */
@@ -91,9 +85,9 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 *
 	 * @param string $connectionName Connection name, or use the property `$connectionName` if empty
 	 * @see IModel::getEntityManager()
-	 * @return \Doctrine\ORM\EntityManager entity manager
+	 * @return EntityManager entity manager
 	 */
-	public static function getEntityManager($connectionName = NULL) {
+	public static function getEntityManager($connectionName = null) {
 		static $entityManagers = array();
 		if (!$connectionName) {
 			$connectionName = static::getConnectionName();
@@ -110,31 +104,29 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 *
 	 * @param string $connectionName Connection name, or use the property `$connectionName` if empty
 	 * @see IModel::getRepository()
-	 * @return \Doctrine\ORM\EntityRepository entity repository
+	 * @return EntityRepository entity repository
 	 */
-	public static function getRepository($connectionName = NULL) {
+	public static function getRepository($connectionName = null) {
 		return static::getEntityManager($connectionName)->getRepository(get_called_class());
 	}
 
 	/**
 	 * Doctrine callback executed after a record was loaded
 	 *
-	 * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
-	 * @return void
+	 * @param object $eventArgs Event arguments
 	 */
 	public function onPostLoad(LifecycleEventArgs $eventArgs) {
-		$this->_exists = TRUE;
+		$this->_exists = true;
 	}
 
 	/**
 	 * Doctrine callback executed before persisting a new record
 	 *
-	 * @param \Doctrine\ORM\Event\LifecycleEventArgs $eventArgs Event arguments
+	 * @param object $eventArgs Event arguments
 	 * @throws ValidateException
-	 * @return void
 	 */
 	public function onPrePersist(LifecycleEventArgs $eventArgs) {
-		$this->_exists = FALSE;
+		$this->_exists = false;
 		if (!$this->validates()) {
 			throw new ValidateException($this);
 		}
@@ -143,12 +135,11 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	/**
 	 * Doctrine callback executed before persisting an existing record
 	 *
-	 * @param \Doctrine\ORM\Event\PreUpdateEventArgs|object $eventArgs Event arguments
+	 * @param object $eventArgs Event arguments
 	 * @throws ValidateException
-	 * @return void
 	 */
 	public function onPreUpdate(PreUpdateEventArgs $eventArgs) {
-		$this->_exists = TRUE;
+		$this->_exists = true;
 		if (!$this->validates()) {
 			throw new ValidateException($this);
 		}
@@ -173,13 +164,13 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 		$rules = $options['rules'];
 		unset($options['rules']);
 
-		if (!empty($rules) && $this->_errors = $validator::check($this->_getData(TRUE), $rules, $options)) {
-			return FALSE;
+		if (!empty($rules) && $this->_errors = $validator::check($this->_getData(true), $rules, $options)) {
+			return false;
 		}
-		return TRUE;
+		return true;
 	}
 
-	/**
+   /**
 	 * Allows several properties to be assigned at once, i.e.:
 	 * {{{
 	 * $record->set(array('title' => 'Lorem Ipsum', 'value' => 42));
@@ -189,10 +180,9 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 * @param array $data An associative array of fields and values to assign to this instance.
 	 * @param array $whitelist Fields to allow setting
 	 * @param bool $useWhitelist Set to false to ignore whitelist
-	 * @throws \Exception
-	 * @return void
+	 * @throws Exception
 	 */
-	public function set(array $data, array $whitelist = array(), $useWhitelist = TRUE) {
+	public function set(array $data, array $whitelist = array(), $useWhitelist = true) {
 		if (empty($data)) {
 			return;
 		} elseif ($useWhitelist && empty($whitelist)) {
@@ -225,10 +215,10 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 * @param bool $allProperties If true, get also properties without getter methods
 	 * @return mixed Entire data array if $name is empty, otherwise the value from the named field.
 	 */
-	public function data($name = NULL, $allProperties = FALSE) {
+	public function data($name = null, $allProperties = false) {
 		$data = $this->_getData($allProperties);
 		if (isset($name)) {
-			return array_key_exists($name, $data) ? $data[$name] : NULL;
+			return array_key_exists($name, $data) ? $data[$name] : null;
 		}
 		return $data;
 	}
@@ -236,7 +226,6 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	/**
 	 * Get the entity fields
 	 *
-	 * @throws \Exception
 	 * @return array
 	 */
 	protected function _getEntityFields() {
@@ -256,7 +245,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 * @param bool $allProperties If true, get also properties without getter methods
 	 * @return array Data
 	 */
-	protected function _getData($allProperties = FALSE) {
+	protected function _getData($allProperties = false) {
 		$data = array();
 		foreach($this->_getEntityFields() as $field) {
 			$method = 'get' . Inflector::camelize($field);
@@ -267,7 +256,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 			}
 		}
 		if (isset($name)) {
-			return array_key_exists($name, $data) ? $data[$name] : NULL;
+			return array_key_exists($name, $data) ? $data[$name] : null;
 		}
 		return $data;
 	}
