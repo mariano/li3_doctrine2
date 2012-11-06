@@ -97,7 +97,7 @@ abstract class BaseSession implements ISession {
 	/**
 	 * Set expiration date
 	 *
-	 * @param DateTime $expires Expiration date
+	 * @param \DateTime $expires Expiration date
 	 */
 	public function setExpires(\DateTime $expires) {
 		$this->expires = $expires;

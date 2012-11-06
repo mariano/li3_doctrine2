@@ -57,7 +57,6 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Create an entity manager
 	 *
-	 * @param array $params Parameters
 	 * @return object Entity manager
 	 * @filter
 	 */
@@ -109,7 +108,7 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Event executed after a record was loaded
 	 *
-	 * @param object $eventArgs Event arguments
+	 * @param LifecycleEventArgs $eventArgs Event arguments
 	 */
 	public function postLoad(LifecycleEventArgs $eventArgs) {
 		$this->dispatchEntityEvent($eventArgs->getEntity(), 'onPostLoad',
@@ -120,7 +119,7 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Event executed before a record is to be created
 	 *
-	 * @param object $eventArgs Event arguments
+	 * @param LifecycleEventArgs $eventArgs Event arguments
 	 */
 	public function prePersist(LifecycleEventArgs $eventArgs) {
 		$this->dispatchEntityEvent($eventArgs->getEntity(), 'onPrePersist',
@@ -131,7 +130,7 @@ class Doctrine extends \lithium\data\Source {
 	/**
 	 * Event executed before a record is to be updated
 	 *
-	 * @param object $eventArgs Event arguments
+	 * @param PreUpdateEventArgs $eventArgs Event arguments
 	 */
 	public function preUpdate(PreUpdateEventArgs $eventArgs) {
 		$this->dispatchEntityEvent($eventArgs->getEntity(), 'onPreUpdate',
@@ -143,7 +142,7 @@ class Doctrine extends \lithium\data\Source {
 	 * Dispatch an entity event
 	 *
 	 * @param object $entity Entity on where to dispatch event
-	 * @param string $event Event name
+	 * @param string $eventName Event name
 	 * @param array $args Event arguments
 	 */
 	protected function dispatchEntityEvent($entity, $eventName, array $args) {

@@ -85,7 +85,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 *
 	 * @param string $connectionName Connection name, or use the property `$connectionName` if empty
 	 * @see IModel::getEntityManager()
-	 * @return EntityManager entity manager
+	 * @return \Doctrine\ORM\EntityManager entity manager
 	 */
 	public static function getEntityManager($connectionName = null) {
 		static $entityManagers = array();
@@ -113,7 +113,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	/**
 	 * Doctrine callback executed after a record was loaded
 	 *
-	 * @param object $eventArgs Event arguments
+	 * @param LifecycleEventArgs $eventArgs Event arguments
 	 */
 	public function onPostLoad(LifecycleEventArgs $eventArgs) {
 		$this->_exists = true;
@@ -122,7 +122,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	/**
 	 * Doctrine callback executed before persisting a new record
 	 *
-	 * @param object $eventArgs Event arguments
+	 * @param LifecycleEventArgs $eventArgs Event arguments
 	 * @throws ValidateException
 	 */
 	public function onPrePersist(LifecycleEventArgs $eventArgs) {
@@ -135,7 +135,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	/**
 	 * Doctrine callback executed before persisting an existing record
 	 *
-	 * @param object $eventArgs Event arguments
+	 * @param PreUpdateEventArgs $eventArgs Event arguments
 	 * @throws ValidateException
 	 */
 	public function onPreUpdate(PreUpdateEventArgs $eventArgs) {
@@ -180,7 +180,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 * @param array $data An associative array of fields and values to assign to this instance.
 	 * @param array $whitelist Fields to allow setting
 	 * @param bool $useWhitelist Set to false to ignore whitelist
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function set(array $data, array $whitelist = array(), $useWhitelist = true) {
 		if (empty($data)) {
@@ -227,6 +227,9 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 	 * Get the entity fields
 	 *
 	 * @return array
+	 *
+	 * @throws \Exception
+	 * @todo $class is not defined
 	 */
 	protected function _getEntityFields() {
 		static $entityFields;

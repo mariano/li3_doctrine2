@@ -22,7 +22,7 @@ class ValidateException extends \Exception {
 			$first = current($this->errors);
 			$message = is_array($first) ? current($first) : $first;
 		}
-		parent::__construct($message);
+		return parent::__construct($message);
 	}
 
 	public function getEntity() {

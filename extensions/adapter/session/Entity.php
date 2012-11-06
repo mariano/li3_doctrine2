@@ -90,6 +90,8 @@ class Entity {
 	 *
 	 * @param array $config Available configuration options for this adapter:
 	 *				- `'config'` _string_: The name of the model that this adapter should use.
+	 *
+	 * @throws ConfigException
 	 */
 	public function __construct(array $config = array()) {
 		$this->config = Set::merge($this->config, $config);
@@ -195,6 +197,8 @@ class Entity {
 	 * @param string $key Key of the entry to be checked.
 	 * @param array $options Options array. Not used for this adapter method.
 	 * @return closure Function returning boolean `true` if the key exists, `false` otherwise.
+	 *
+	 * @throws RuntimeException
 	 */
 	public function check($key, array $options = array()) {
 		if (!$this->isStarted() && $this->_startup() === false) {
@@ -248,6 +252,8 @@ class Entity {
 	 * @param mixed $value The value to be stored.
 	 * @param array $options Options array. Not used for this adapter method.
 	 * @return closure Function returning boolean `true` on successful write, `false` otherwise.
+	 *
+	 * @throws RuntimeException
 	 */
 	public function write($key, $value, array $options = array()) {
 		if (!$this->isStarted() && $this->_startup() === false) {
@@ -272,6 +278,8 @@ class Entity {
 	 * @param array $options Options array. Not used for this adapter method.
 	 * @return closure Function returning boolean `true` if the key no longer exists
 	 *		   in the session, `false` otherwise
+	 *
+	 * @throws RuntimeException
 	 */
 	public function delete($key, array $options = array()) {
 		if (!$this->isStarted() && $this->_startup() === false) {
@@ -293,6 +301,8 @@ class Entity {
 	 *
 	 * @param array $options Options array. Not used fro this adapter method.
 	 * @return closure Function returning boolean `true` on successful clear, `false` otherwise.
+	 *
+	 * @throws RuntimeException
 	 */
 	public function clear(array $options = array()) {
 		if (!$this->isStarted() && $this->_startup() === false) {
@@ -375,7 +385,7 @@ class Entity {
 	/**
 	 * The session save handler callback for reading data from the session.
 	 *
-	 * @param string $key The key of the data to be returned. If no key is specified,
+	 * @param string $id The key of the data to be returned. If no key is specified,
 	 *		  then all session data is returned in an array of key/value pairs.
 	 * @return mixed Value corresponding to key if set, null otherwise.
 	 */
@@ -386,8 +396,8 @@ class Entity {
 	/**
 	 * The session save handler callback for writing data to the session.
 	 *
-	 * @param string $key The key of the data to be returned.
-	 * @param mixed $value The value to be written to the session.
+	 * @param string $id The key of the data to be returned.
+	 * @param mixed $data The value to be written to the session.
 	 * @return boolean True if write was successful, false otherwise.
 	 */
 	public function _write($id, $data) {

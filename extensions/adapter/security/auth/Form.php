@@ -64,6 +64,8 @@ class Form extends \lithium\security\auth\adapter\Form {
 	 *				  property for more details.
 	 *				- `'query'` _string_: Determines the model method to invoke for authentication
 	 *				  checks. See the `$_query` property for more details.
+	 *
+	 * @throws ConfigException
 	 */
 	public function __construct(array $config = array()) {
 		$config += array(
