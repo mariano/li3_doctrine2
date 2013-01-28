@@ -188,7 +188,7 @@ class Doctrine extends \lithium\data\Source {
 	 *         - `'type'`: The field type name
 	 * @todo
 	 */
-	public function describe($entity, $schema = array(), array $meta = array()) {}
+	public function describe($entity, array $meta = array()) {}
 
 	/**
 	 * Defines or modifies the default settings of a relationship between two models.
