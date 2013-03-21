@@ -41,7 +41,8 @@ class Doctrine extends \lithium\data\Source {
 		$defaults = array(
 			'models' => LITHIUM_APP_PATH . '/models',
 			'proxies' => LITHIUM_APP_PATH . '/models/proxies',
-			'proxyNamespace' => 'proxies'
+			'proxyNamespace' => 'proxies',
+			'cache' => null
 		);
 		$this->connectionSettings = array_diff_key($config, array_merge(
 			$defaults, array(
@@ -70,7 +71,8 @@ class Doctrine extends \lithium\data\Source {
 		$configuration = Setup::createAnnotationMetadataConfiguration(
 			array($this->_config['models']),
 			Environment::is('development'),
-			$this->_config['proxies']
+			$this->_config['proxies'],
+			isset($this->_config['cache']) ? call_user_func($this->_config['cache']) : null
 		);
 		$configuration->setProxyNamespace($this->_config['proxyNamespace']);
 
