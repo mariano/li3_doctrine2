@@ -13,6 +13,8 @@ a required package:
 ```json
 {
 	"require": {
+		"doctrine/orm": ">=2.1",
+		"doctrine/migrations": "dev-master",
 		"mariano/li3_doctrine2": "dev-master"
 	}
 }
@@ -28,8 +30,15 @@ $ composer install
 
 ## Adding the li3\_doctrine2 library ##
 
-Once you have downloaded li3\_doctrine2 and placed it in your main `libraries`
-folder, or your `app/libraries` folder, you need to enable it by placing the 
+You will first need to ensure that Composer's autoload file is loaded so all
+vendor classes (such as Doctrine) can be loaded. Place the following at the
+end of your `app/config/bootstrap/libraries.php` file:
+
+```php
+require_once(LITHIUM_LIBRARY_PATH . '/autoload.php');
+```
+
+You will then need to load the li3\_doctrine2 library by placing the 
 following at the end of your `app/config/bootstrap/libraries.php` file:
 
 ```php
