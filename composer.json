@@ -1,6 +1,6 @@
 {
 	"name": "mariano/li3_doctrine2",
-	"type": "library",
+	"type": "lithium-library",
 	"description": "li3_doctrine2 offers Doctrine2 as an ORM for the Lithium framework",
 	"keywords": ["doctrine","doctrine2","orm","database","lithium"],
 	"homepage": "https://github.com/mariano/li3_doctrine2",
