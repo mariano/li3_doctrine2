@@ -63,8 +63,6 @@ class Doctrine extends \lithium\data\Source {
 	 * @filter
 	 */
 	protected function createEntityManager() {
-		require_once(__DIR__ . '/../../../vendor/autoload.php');
-
 		$configuration = Setup::createAnnotationMetadataConfiguration(
 			array($this->_config['models']),
 			Environment::is('development'),
