@@ -13,7 +13,7 @@ a required package:
 ```json
 {
 	"require": {
-		"li3_doctrine2/li3_doctrine2": "~1.0"
+		"li3_doctrine2/li3_doctrine2": "dev-master"
 	}
 }
 ```
