@@ -1,6 +1,0 @@
-[submodule "_source/doctrine2"]
-	path = _source/doctrine2
-	url = https://github.com/doctrine/doctrine2.git
-[submodule "_source/migrations"]
-	path = _source/migrations
-	url = https://github.com/doctrine/migrations.git

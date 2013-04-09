@@ -3,18 +3,25 @@ and possibly the best PHP 5.3 ORM out there: [Doctrine2] [doctrine2]
 
 # License #
 
-li3\_doctrine2 is released under the [BSD License] [license].
+li3\_doctrine2 is released under the [MIT License] [license].
 
 # Installation #
 
-It is recommended that you install li3\_doctrine2 as a GIT submodule, in order
-to keep up with the latest upgrades. To do so, switch to the core directory
-holding your lithium application, and do:
+Install [Composer] [composer] if you didn't already. Then add li3\_doctrine2 as
+a required package:
+
+```json
+{
+	"require": {
+		"li3_doctrine2/li3_doctrine2": "~1.0"
+	}
+}
+```
+
+Finally, tell composer to add the requirement:
 
 ```bash
-$ git submodule add https://github.com/mariano/li3_doctrine2.git libraries/li3_doctrine2
-$ cd libraries/li3_doctrine2
-$ git submodule update --init --recursive
+$ composer install
 ```
 
 # Usage #
@@ -620,7 +627,8 @@ is activated. You should now see your queries on the performance toolbar.
 
 [lithium]: http://lithify.me
 [doctrine2]: http://www.doctrine-project.org
-[license]: http://www.opensource.org/licenses/bsd-license.php
+[license]: http://www.opensource.org/licenses/mit-license.php
+[composer]: http://getcomposer.org
 [DoctrineExtensions]: https://github.com/l3pp4rd/DoctrineExtensions
 [doctrine-mapping-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/basic-mapping.html
 [doctrine-querying-guide]: http://www.doctrine-project.org/docs/orm/2.1/en/reference/working-with-objects.html#querying
