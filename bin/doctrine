@@ -5,8 +5,6 @@ set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, a
     $path . 'lib'
 )));
 
-require_once $path . 'lib/vendor/doctrine-common/lib/Doctrine/Common/ClassLoader.php';
-
 $configFile = __DIR__ . '/doctrine-cli-config.php';
 
 $helperSet = null;
