@@ -31,17 +31,13 @@ $ composer install
 ## Adding the li3\_doctrine2 library ##
 
 You will first need to ensure that Composer's autoload file is loaded so all
-vendor classes (such as Doctrine) can be loaded. Place the following at the
-end of your `app/config/bootstrap/libraries.php` file:
+vendor classes (such as Doctrine) can be loaded, and then load the li3\_doctrine2
+library. Place the following at the end of your 
+`app/config/bootstrap/libraries.php` file:
 
 ```php
 require_once(LITHIUM_LIBRARY_PATH . '/autoload.php');
-```
 
-You will then need to load the li3\_doctrine2 library by placing the 
-following at the end of your `app/config/bootstrap/libraries.php` file:
-
-```php
 Libraries::add('li3_doctrine2');
 ```
 
