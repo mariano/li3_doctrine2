@@ -9,6 +9,8 @@
 namespace li3_doctrine2\extensions\data\source;
 
 use lithium\core\Environment;
+use Doctrine\Common\EventManager;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -71,7 +73,7 @@ class Doctrine extends \lithium\data\Source {
 		);
 		$configuration->setProxyNamespace($this->_config['proxyNamespace']);
 
-		$eventManager = new \Doctrine\Common\EventManager();
+		$eventManager = new EventManager();
 		$eventManager->addEventListener(array(
 			Events::postLoad,
 			Events::prePersist,
@@ -82,7 +84,7 @@ class Doctrine extends \lithium\data\Source {
 		$params = compact('connection', 'configuration', 'eventManager');
 		return $this->_filter(__METHOD__, $params,
 			function($self, $params) {
-				return \Doctrine\ORM\EntityManager::create(
+				return EntityManager::create(
 					$params['connection'],
 					$params['configuration'],
 					$params['eventManager']
@@ -98,9 +100,16 @@ class Doctrine extends \lithium\data\Source {
 	 */
 	public function getEntityManager() {
 		if (!isset($this->entityManager)) {
-			$this->entityManager = $this->createEntityManager();
+			$this->recreateEntityManager();
 		}
 		return $this->entityManager;
+	}
+
+	/**
+	 * Recreate entity manager
+	 */
+	public function recreateEntityManager() {
+		$this->entityManager = $this->createEntityManager();
 	}
 
 	/**
@@ -241,4 +250,3 @@ class Doctrine extends \lithium\data\Source {
 	 */
 	public function delete($query, array $options = array()) {}
 }
-?>

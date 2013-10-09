@@ -8,10 +8,13 @@ li3\_doctrine2 is released under the [MIT License] [license].
 # Installation #
 
 Install [Composer] [composer] if you didn't already. Then add li3\_doctrine2 as
-a required package:
+a required package (together with Doctrine and migrations):
 
 ```json
 {
+	"config": {
+		"vendor-dir": "libraries"
+	},
 	"require": {
 		"doctrine/orm": ">=2.1",
 		"doctrine/migrations": "dev-master",
@@ -20,7 +23,7 @@ a required package:
 }
 ```
 
-Finally, tell composer to add the requirement:
+Finally, tell composer to install these packages:
 
 ```bash
 $ composer install
@@ -34,7 +37,9 @@ library. Place the following at the end of your
 ```php
 require_once(LITHIUM_LIBRARY_PATH . '/autoload.php');
 
-Libraries::add('li3_doctrine2');
+Libraries::add('li3_doctrine2', [
+	'path' => LITHIUM_LIBRARY_PATH . '/mariano/li3_doctrine2'
+]);
 ```
 
 # Usage #
@@ -47,14 +52,14 @@ sure to edit the settings to match your host, without altering the `type`
 setting):
 
 ```php
-Connections::add('default', array(
+Connections::add('default', [
 	'type' => 'Doctrine',
 	'driver' => 'pdo_mysql',
 	'host' => 'localhost',
 	'user' => 'root',
 	'password' => 'password',
 	'dbname' => 'my_db'
-));
+]);
 ```
 
 ### Working with master-slave connections ###
@@ -66,31 +71,31 @@ single server, you give the details for the master server, and each of the
 slave servers. Example:
 
 ```php
-Connections::add('default', array(
+Connections::add('default', [
 	'type' => 'Doctrine',
 	'driver' => 'pdo_mysql',
 	'wrapperClass' => 'Doctrine\DBAL\Connections\MasterSlaveConnection',
-    'master' => array(
+    'master' => [
 		'host' => 'master.example.com',
 		'user' => 'root',
 		'password' => 'password',
 		'dbname' => 'my_db'
-	),
-    'slaves' => array(
-		array(
+	],
+    'slaves' => [
+		[
 			'host' => 'slave1.example.com',
 			'user' => 'root',
 			'password' => 'password',
 			'dbname' => 'my_db'
-		),
-		array(
+		],
+		[
 			'host' => 'slave2.example.com',
 			'user' => 'root',
 			'password' => 'password',
 			'dbname' => 'my_db'
-		)
-    )
-));
+		]
+    ]
+]);
 ```
 
 ## Working with models ##
@@ -153,15 +158,14 @@ class User extends \li3_doctrine2\models\BaseEntity {
 	/**
 	 * Validation rules
 	 */
-	protected $validates = array(
-		'email' => array(
-			'required' => array('notEmpty', 'message' => 'Email is required'),
-			'valid' => array('email', 'message' => 'You must specify a valid email address', 'skipEmpty' => true)
-		),
-		'password' => array('notEmpty', 'message' => 'Password must not be blank'),
-		'name' => array('notEmpty', 'message' => 'Please provide your full name')
-
-	);
+	protected $validates = [
+		'email' => [
+			'required' => ['notEmpty', 'message' => 'Email is required'],
+			'valid' => ['email', 'message' => 'You must specify a valid email address', 'skipEmpty' => true]
+		],
+		'password' => ['notEmpty', 'message' => 'Password must not be blank'],
+		'name' => ['notEmpty', 'message' => 'Please provide your full name']
+	];
 
 	public function getId() {
 		return $this->id;
@@ -310,7 +314,7 @@ If so, the above code could be rewritten as:
 
 ```php
 $user = new User();
-$user->set($this->request->data, array('name', 'email'));
+$user->set($this->request->data, ['name', 'email']);
 
 try {
 	$em->persist($user);
@@ -328,7 +332,7 @@ errors:
 ```php
 <?php echo $this->form->create(isset($user) ? $user : null); ?>
 	<?php echo $this->form->field('email'); ?>
-	<?php echo $this->form->field('password', array('type' => 'password')); ?>
+	<?php echo $this->form->field('password', ['type' => 'password']); ?>
 	<?php echo $this->form->field('name'); ?>
 	<?php echo $this->form->submit('Signup'); ?>
 <?php echo $this->form->end(); ?>
@@ -342,7 +346,7 @@ a form submission. As part of the shown `set()` usage, you may have noticed a
 list of fields passed on the second argument:
 
 ```php
-$user->set($this->request->data, array('name', 'email'));
+$user->set($this->request->data, ['name', 'email']);
 ```
 
 This argument is a whitelist of fields that specifies which fields that are
@@ -359,7 +363,7 @@ array on the second argument, and `false` to the third argument. So the
 example above would be changed to:
 
 ```php
-$user->set($this->request->data, array(), false)
+$user->set($this->request->data, [], false)
 ```
 
 # Extensions #
@@ -374,9 +378,10 @@ interaction with Doctrine2 entities. To use these validators, you will have
 to set the `validators` option to `true` when adding the library:
 
 ```php
-Libraries::add('li3_doctrine2', array(
+Libraries::add('li3_doctrine2', [
+	'path' => LITHIUM_LIBRARY_PATH . '/mariano/li3_doctrine2',
 	'validators' => true
-));
+]);
 ```
 
 ### Unique validator ###
@@ -388,18 +393,18 @@ for your `User` model, you'd add the following expression to the model's
 for informational purposes only):
 
 ```php
-'email' => array(
-	'required' => array('notEmpty', 'message' => 'Email is required'),
-	'valid' => array('email', 'message' => 'You must specify a valid email address, 'skipEmpty' => true),
-	'unique' => array('unique', 'message' => 'This email is already being used for another account, 'skipEmpty' => true)
-)
+'email' => [
+	'required' => ['notEmpty', 'message' => 'Email is required'],
+	'valid' => ['email', 'message' => 'You must specify a valid email address, 'skipEmpty' => true],
+	'unique' => ['unique', 'message' => 'This email is already being used for another account, 'skipEmpty' => true]
+]
 ```
 
 The `unique` validator accepts a handful of options:
 
 * `conditions`: Extra conditions that will be added to the default condition 
 (in the above example the default condition would be `email => value`, where
-value is the value given when submitting the form). Defaults to: `array()`.
+value is the value given when submitting the form). Defaults to: `[]`.
 * `getEntityManager`: The method defined in the model that is used to
 obtain the model's entity manager. If your model extends from `BaseEntity`, the
 default will work just fine. If you don't want to extend from `BaseEntity`,
@@ -455,12 +460,12 @@ console. Finally, edit your `app/config/bootstrap/session.php` file and use the
 following to configure the session:
 
 ```php
-Session::config(array(
-	'default' => array(
+Session::config([
+	'default' => [
 		'adapter' => 'li3_doctrine2\extensions\adapter\session\Entity',
 		'model' => 'app\models\Session'
-	)
-));
+	]
+]);
 ```
 
 If you wish to override session INI settings, use the `ini` setting. For 
@@ -472,15 +477,13 @@ $host = $_SERVER['HTTP_HOST'];
 if (strpos($host, '.') !== false) {
 	$host = preg_replace('/^.*?([^\.]+\.[^\.]+)$/', '\\1', $host);
 }
-Session::config(array(
-	'default' => array(
+Session::config([
+	'default' => [
 		'adapter' => 'li3_doctrine2\extensions\adapter\session\Entity',
 		'model' => 'app\models\Session',
-		'ini' => array(
-			'cookie_domain' => '.' . $host
-		)
-	)
-));
+		'ini' => ['cookie_domain' => '.' . $host]
+	]
+]);
 ```
 
 ## Authentication ##
@@ -506,13 +509,13 @@ Once you have your model, you need to configure `Auth`. Edit your
 ```php
 use lithium\security\Auth;
 
-Auth::config(array(
-	'default' => array(
+Auth::config([
+	'default' => [
 		'adapter' => 'li3_doctrine2\extensions\adapter\security\auth\Form',
 		'model' => 'app\models\User',
-		'fields' => array('email', 'password')
-	)
-));
+		'fields' => ['email', 'password']
+	]
+]);
 ```
 
 Once this is done, you can use `Auth` as usual.
@@ -543,9 +546,9 @@ For example, if you wish to use Timestampable and Sluggable, you would first add
 the library in `app/config/libraries.php`:
 
 ```php
-Libraries::add('Gedmo', array(
+Libraries::add('Gedmo', [
 	'path' => LITHIUM_LIBRARY_PATH . '/_source/DoctrineExtensions/lib/Gedmo'
-));
+]);
 ```
 
 And then you would filter the `createEntityManager()` method in the `Doctrine`
@@ -598,10 +601,10 @@ class Li3PerfSQLLogger implements SQLLogger {
 
 	public function stopQuery() {
 		$ellapsed = (microtime(true) - $this->start) * 1000;
-		Data::append('queries', array(array_merge(
-			array('explain' => array('millis' => $ellapsed)),
+		Data::append('queries', [array_merge(
+			['explain' => ['millis' => $ellapsed]],
 			$this->query
-		)));
+		)]);
 	}
 }
 

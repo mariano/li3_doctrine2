@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-$path = __DIR__ . '/../_source/doctrine2/';
+$path = __DIR__ . '/../../../doctrine/';
 set_include_path(get_include_path() . PATH_SEPARATOR . implode(PATH_SEPARATOR, array(
     $path . 'lib'
 )));
@@ -42,5 +42,3 @@ $cli->addCommands(array(
 	new \Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand()
 ));
 $cli->run();
-
-?>

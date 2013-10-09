@@ -1,6 +1,6 @@
 <?php
 define('PLUGIN_PATH', dirname(dirname(__FILE__)));
-define('ROOT', dirname(dirname(PLUGIN_PATH)));
+define('ROOT', dirname(dirname(dirname(PLUGIN_PATH))));
 
 $candidates = array(
     ROOT . '/',
@@ -55,7 +55,7 @@ if (is_array($libraryModelPaths)) {
 $loader = new \Doctrine\Common\ClassLoader('Doctrine\DBAL\Migrations', PLUGIN_PATH . '/_source/migrations/lib');
 $loader->register();
 
-Doctrine\ORM\Tools\Setup::registerAutoloadGit(PLUGIN_PATH . '/_source/doctrine2');
+//Doctrine\ORM\Tools\Setup::registerAutoloadGit(PLUGIN_PATH . '/_source/doctrine2');
 
 $em = $connection->getEntityManager();
 
