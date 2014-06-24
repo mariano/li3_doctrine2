@@ -22,5 +22,8 @@
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~3.7.16"
-	}
+	},
+        "require": {
+                "composer/installers": "*"
+        }
 }
