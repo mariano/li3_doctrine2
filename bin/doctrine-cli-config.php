@@ -1,6 +1,6 @@
 <?php
 define('PLUGIN_PATH', dirname(dirname(__FILE__)));
-define('ROOT', dirname(dirname(dirname(PLUGIN_PATH))));
+define('ROOT', dirname(dirname(PLUGIN_PATH)));
 
 $candidates = array(
     ROOT . '/',
