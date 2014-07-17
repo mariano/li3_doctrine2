@@ -58,6 +58,15 @@ class Doctrine extends \lithium\data\Source {
 	}
 
 	/**
+	 * Get current configuration
+	 *
+	 * @return array Configuration
+	 */
+	public function getConfig() {
+		return $this->_config;
+	}
+
+	/**
 	 * Create an entity manager
 	 *
 	 * @param array $params Parameters
@@ -185,13 +194,13 @@ class Doctrine extends \lithium\data\Source {
 	 * Gets the column schema for a given entity (such as a database table).
 	 *
 	 * @param mixed $entity Specifies the table name for which the schema should be returned, or
-	 *        the class name of the model object requesting the schema, in which case the model
-	 *        class will be queried for the correct table name.
+	 *		  the class name of the model object requesting the schema, in which case the model
+	 *		  class will be queried for the correct table name.
 	 * @param array $meta
 	 * @return array Returns an associative array describing the given table's schema, where the
-	 *         array keys are the available fields, and the values are arrays describing each
-	 *         field, containing the following keys:
-	 *         - `'type'`: The field type name
+	 *		   array keys are the available fields, and the values are arrays describing each
+	 *		   field, containing the following keys:
+	 *		   - `'type'`: The field type name
 	 * @todo
 	 */
 	public function describe($entity, $schema = array(), array $meta = array()) {}
@@ -231,9 +240,9 @@ class Doctrine extends \lithium\data\Source {
 	 * Updates a set of records in a concrete data store.
 	 *
 	 * @param mixed $query An object which defines the update operation(s) that should be performed
-	 *        against the data store.  This can be a `Query`, a `RecordSet`, a `Record`, or a
-	 *        subclass of one of the three. Alternatively, `$query` can be an adapter-specific
-	 *        query string.
+	 *		  against the data store.  This can be a `Query`, a `RecordSet`, a `Record`, or a
+	 *		  subclass of one of the three. Alternatively, `$query` can be an adapter-specific
+	 *		  query string.
 	 * @param array $options Options to execute, which are defined by the concrete implementation.
 	 * @return boolean Returns true if the update operation was a success, otherwise false.
 	 * @todo
