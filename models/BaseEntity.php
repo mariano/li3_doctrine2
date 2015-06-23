@@ -92,7 +92,7 @@ abstract class BaseEntity extends \lithium\data\Entity implements IModel {
 		if (!$connectionName) {
 			$connectionName = static::getConnectionName();
 		}
-		if (!isset($entityManager[$connectionName])) {
+		if (!isset($entityManagers[$connectionName])) {
 			$connections = static::$_classes['connections'];
 			$entityManagers[$connectionName] = $connections::get($connectionName)->getEntityManager();
 		}
